@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>计划详情 - 智能学习助手</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <style>
+        body {
+            height: 100vh;
+            background-color: var(--background);
+            padding-bottom: 70px; /* 为底部导航栏留出空间 */
+        }
+        
+        .app-bar {
+            background-color: var(--primary);
+            color: var(--on-primary);
+            padding: 16px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .app-bar-back {
+            margin-right: 16px;
+            color: var(--on-primary);
+            font-size: 20px;
+        }
+        
+        .app-bar-title {
+            font-size: 18px;
+            font-weight: 500;
+            flex: 1;
+        }
+        
+        .app-bar-action {
+            color: var(--on-primary);
+            font-size: 18px;
+            margin-left: 16px;
+        }
+        
+        .plan-header {
+            background-color: var(--primary-container);
+            color: var(--on-primary-container);
+            padding: 20px 16px;
+        }
+        
+        .plan-title {
+            font-size: 20px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        
+        .plan-meta {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+        
+        .plan-meta-item {
+            margin-right: 16px;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .plan-meta-icon {
+            margin-right: 6px;
+        }
+        
+        .plan-progress-container {
+            margin: 16px 0 8px;
+        }
+        
+        .plan-progress-bar {
+            height: 6px;
+            background-color: rgba(0, 0, 0, 0.1);
+            border-radius: 3px;
+            margin-bottom: 8px;
+        }
+        
+        .plan-progress-value {
+            height: 100%;
+            background-color: var(--on-primary-container);
+            border-radius: 3px;
+        }
+        
+        .plan-progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+        }
+        
+        .tab-container {
+            background-color: var(--surface);
+            display: flex;
+            border-bottom: 1px solid var(--surface-variant);
+        }
+        
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 12px 0;
+            color: var(--on-surface-variant);
+            font-size: 14px;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .tab.active {
+            color: var(--primary);
+            font-weight: 500;
+        }
+        
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 25%;
+            width: 50%;
+            height: 2px;
+            background-color: var(--primary);
+        }
+        
+        .content-container {
+            padding: 16px;
+        }
+        
+        .panel {
+            display: none;
+        }
+        
+        .panel.active {
+            display: block;
+        }
+        
+        .phase-card {
+            background-color: var(--surface);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .phase-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        
+        .phase-title {
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+        
+        .phase-order {
+            width: 24px;
+            height: 24px;
+            background-color: var(--primary-container);
+            color: var(--on-primary-container);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            margin-right: 8px;
+        }
+        
+        .phase-date {
+            font-size: 12px;
+            color: var(--on-surface-variant);
+        }
+        
+        .phase-description {
+            font-size: 14px;
+            color: var(--on-surface-variant);
+            margin-bottom: 12px;
+        }
+        
+        .task-list {
+            margin-top: 16px;
+        }
+        
+        .task-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--surface-variant);
+        }
+        
+        .task-item:last-child {
+            border-bottom: none;
+        }
+        
+        .task-checkbox {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            border: 2px solid var(--outline);
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .task-checkbox.checked {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            color: var(--on-primary);
+        }
+        
+        .task-content {
+            flex: 1;
+        }
+        
+        .task-title {
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+        
+        .task-title.completed {
+            text-decoration: line-through;
+            opacity: 0.7;
+        }
+        
+        .task-date {
+            font-size: 12px;
+            color: var(--on-surface-variant);
+        }
+        
+        .plan-description {
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+        
+        .info-section {
+            margin-bottom: 16px;
+        }
+        
+        .info-title {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        
+        .info-content {
+            font-size: 14px;
+            color: var(--on-surface-variant);
+        }
+        
+        .adjustment-list {
+            margin-top: 16px;
+        }
+        
+        .adjustment-item {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--surface-variant);
+        }
+        
+        .adjustment-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        
+        .adjustment-title {
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .adjustment-date {
+            font-size: 12px;
+            color: var(--on-surface-variant);
+        }
+        
+        .adjustment-reason {
+            font-size: 14px;
+            color: var(--on-surface-variant);
+        }
+        
+        .fab-container {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+        }
+        
+        .fab {
+            width: 56px;
+            height: 56px;
+            border-radius: 28px;
+            background-color: var(--primary);
+            color: var(--on-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 5px rgba(0,0,0,0.2);
+            font-size: 24px;
+        }
+        
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: var(--surface);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--on-surface-variant);
+            text-decoration: none;
+            font-size: 12px;
+        }
+        
+        .nav-item.active {
+            color: var(--primary);
+        }
+        
+        .nav-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+        
+        .plan-status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-right: 8px;
+        }
+        
+        .plan-status.not-started {
+            background-color: #FFF8E1;
+            color: #F57F17;
+        }
+        
+        .plan-status.in-progress {
+            background-color: #E3F2FD;
+            color: #1565C0;
+        }
+        
+        .plan-status.completed {
+            background-color: #E8F5E9;
+            color: #2E7D32;
+        }
+        
+        .task-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .task-action {
+            color: var(--on-surface-variant);
+            font-size: 14px;
+            padding: 4px;
+        }
+        
+        .task-action:hover {
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <!-- 状态栏 -->
+    <div class="status-bar">
+        <div class="status-bar-time">12:00</div>
+        <div class="status-bar-icons">
+            <i class="fas fa-wifi"></i>
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-battery-full"></i>
+        </div>
+    </div>
+    
+    <!-- 应用栏 -->
+    <div class="app-bar">
+        <a href="plan_list.html" class="app-bar-back">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <div class="app-bar-title">计划详情</div>
+        <a href="#" class="app-bar-action">
+            <i class="fas fa-ellipsis-v"></i>
+        </a>
+    </div>
+    
+    <!-- 计划头部 -->
+    <div class="plan-header">
+        <div style="display: flex; align-items: center; margin-bottom: 8px;">
+            <div class="plan-status in-progress">进行中</div>
+            <h1 class="plan-title">Web前端开发学习</h1>
+        </div>
+        <div class="plan-meta">
+            <div class="plan-meta-item">
+                <span class="plan-meta-icon"><i class="fas fa-calendar-alt"></i></span>
+                <span>2024.05.01 - 2024.08.31</span>
+            </div>
+            <div class="plan-meta-item">
+                <span class="plan-meta-icon"><i class="fas fa-tag"></i></span>
+                <span>编程 / 前端开发</span>
+            </div>
+        </div>
+        
+        <div class="plan-progress-container">
+            <div class="plan-progress-bar">
+                <div class="plan-progress-value" style="width: 35%;"></div>
+            </div>
+            <div class="plan-progress-text">
+                <div>总进度: 35%</div>
+                <div>7/20任务完成</div>
+            </div>
+        </div>
+        
+        <div style="font-size: 12px; margin-top: 8px;">
+            <i class="fas fa-info-circle"></i> 计划已于2024年5月1日自动开始执行，无法调整阶段，仅可调整未开始的任务
+        </div>
+    </div>
+    
+    <!-- 选项卡 -->
+    <div class="tab-container">
+        <div class="tab active" onclick="switchTab('phases')">阶段任务</div>
+        <div class="tab" onclick="switchTab('info')">计划信息</div>
+    </div>
+    
+    <!-- 内容容器 -->
+    <div class="content-container">
+        <!-- 阶段任务面板 -->
+        <div id="phases-panel" class="panel active">
+            <!-- 阶段1 -->
+            <div class="phase-card">
+                <div class="phase-header">
+                    <div class="phase-title">
+                        <div class="phase-order">1</div>
+                        <span>HTML基础</span>
+                    </div>
+                    <div class="phase-date">2024.05.01 - 2024.05.15</div>
+                </div>
+                <div class="phase-description">掌握HTML5基础标签和页面结构</div>
+                <div class="plan-progress-container">
+                    <div class="plan-progress-bar">
+                        <div class="plan-progress-value" style="width: 100%;"></div>
+                    </div>
+                    <div class="plan-progress-text">
+                        <div>完成度: 100%</div>
+                        <div>4/4任务完成</div>
+                    </div>
+                </div>
+                
+                <div class="task-list">
+                    <div class="task-item">
+                        <div class="task-checkbox checked">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="task-content">
+                            <div class="task-title completed">学习HTML基本标签</div>
+                            <div class="task-date">2024.05.01 - 2024.05.03</div>
+                        </div>
+                        <div class="task-actions">
+                            <a href="task_detail.html" class="task-action" title="查看详情">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="task-item">
+                        <div class="task-checkbox checked">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="task-content">
+                            <div class="task-title completed">学习表单元素</div>
+                            <div class="task-date">2024.05.04 - 2024.05.07</div>
+                        </div>
+                        <div class="task-actions">
+                            <a href="task_detail.html" class="task-action" title="查看详情">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="task-item">
+                        <div class="task-checkbox checked">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="task-content">
+                            <div class="task-title completed">学习语义化标签</div>
+                            <div class="task-date">2024.05.08 - 2024.05.10</div>
+                        </div>
+                        <div class="task-actions">
+                            <a href="task_detail.html" class="task-action" title="查看详情">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="task-item">
+                        <div class="task-checkbox checked">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="task-content">
+                            <div class="task-title completed">完成小项目实践</div>
+                            <div class="task-date">2024.05.11 - 2024.05.15</div>
+                        </div>
+                        <div class="task-actions">
+                            <a href="task_detail.html" class="task-action" title="查看详情">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 阶段2 -->
+            <div class="phase-card">
+                <div class="phase-header">
+                    <div class="phase-title">
+                        <div class="phase-order">2</div>
+                        <span>CSS样式</span>
+                    </div>
+                    <div class="phase-date">2024.05.16 - 2024.06.05</div>
+                </div>
+                <div class="phase-description">掌握CSS选择器、布局和响应式设计</div>
+                <div class="plan-progress-container">
+                    <div class="plan-progress-bar">
+                        <div class="plan-progress-value" style="width: 75%;"></div>
+                    </div>
+                    <div class="plan-progress-text">
+                        <div>完成度: 75%</div>
+                        <div>3/4任务完成</div>
+                    </div>
+                </div>
+                
+                <!-- 添加新增任务按钮 -->
+                <div style="text-align: right; margin: 10px 0;">
+                    <a href="task_create.html" class="btn-sm" style="display: inline-block; padding: 6px 12px; background-color: var(--primary); color: var(--on-primary); border-radius: 6px; text-decoration: none; font-size: 12px;">
+                        <i class="fas fa-plus"></i> 新增任务
+                    </a>
+                </div>
+                
+                <div class="task-list">
+                    <div class="task-item">
+                        <div class="task-checkbox checked">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="task-content">
+                            <div class="task-title completed">学习CSS选择器和属性</div>
+                            <div class="task-date">2024.05.16 - 2024.05.20</div>
+                        </div>
+                        <div class="task-actions">
+                            <a href="task_detail.html" class="task-action" title="查看详情">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="task-item">
+                        <div class="task-checkbox checked">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="task-content">
+                            <div class="task-title completed">学习盒模型和布局</div>
+                            <div class="task-date">2024.05.21 - 2024.05.26</div>
+                        </div>
+                        <div class="task-actions">
+                            <a href="task_detail.html" class="task-action" title="查看详情">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="task-item">
+                        <div class="task-checkbox checked">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="task-content">
+                            <div class="task-title completed">学习Flexbox和Grid</div>
+                            <div class="task-date">2024.05.27 - 2024.06.01</div>
+                        </div>
+                        <div class="task-actions">
+                            <a href="task_detail.html" class="task-action" title="查看详情">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="task-item">
+                        <div class="task-checkbox">
+                            <i class="fas fa-check" style="display: none;"></i>
+                        </div>
+                        <div class="task-content">
+                            <div class="task-title">学习响应式设计</div>
+                            <div class="task-date">2024.06.02 - 2024.06.05</div>
+                        </div>
+                        <div class="task-actions">
+                            <a href="task_detail.html" class="task-action" title="查看详情">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 阶段3 -->
+            <div class="phase-card">
+                <div class="phase-header">
+                    <div class="phase-title">
+                        <div class="phase-order">3</div>
+                        <span>JavaScript基础</span>
+                    </div>
+                    <div class="phase-date">2024.06.06 - 2024.07.01</div>
+                </div>
+                <div class="phase-description">掌握JavaScript基础语法、DOM操作和异步编程</div>
+                <div class="plan-progress-container">
+                    <div class="plan-progress-bar">
+                        <div class="plan-progress-value" style="width: 0%;"></div>
+                    </div>
+                    <div class="plan-progress-text">
+                        <div>完成度: 0%</div>
+                        <div>0/4任务完成</div>
+                    </div>
+                </div>
+                
+                <!-- 添加任务列表 -->
+                <div class="task-list">
+                    <div class="task-item">
+                        <div class="task-checkbox">
+                            <i class="fas fa-check" style="display: none;"></i>
+                        </div>
+                        <div class="task-content">
+                            <div class="task-title">学习JavaScript基础语法</div>
+                            <div class="task-date">2024.06.06 - 2024.06.12</div>
+                        </div>
+                        <div class="task-actions">
+                            <a href="task_detail.html" class="task-action" title="查看详情">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            <a href="#" class="task-action" title="编辑" onclick="editTask(event, 1)">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a href="#" class="task-action" title="删除" onclick="deleteTask(event, 1)">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="task-item">
+                        <div class="task-checkbox">
+                            <i class="fas fa-check" style="display: none;"></i>
+                        </div>
+                        <div class="task-content">
+                            <div class="task-title">DOM操作和事件处理</div>
+                            <div class="task-date">2024.06.13 - 2024.06.20</div>
+                        </div>
+                        <div class="task-actions">
+                            <a href="task_detail.html" class="task-action" title="查看详情">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            <a href="#" class="task-action" title="编辑" onclick="editTask(event, 2)">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a href="#" class="task-action" title="删除" onclick="deleteTask(event, 2)">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 计划信息面板 -->
+        <div id="info-panel" class="panel">
+            <div class="info-section">
+                <div class="info-title">计划描述</div>
+                <div class="plan-description">
+                    这是一个全面学习Web前端开发的计划，从HTML基础到JavaScript高级应用，最终目标是成为一名合格的前端开发工程师。通过系统的学习和实践，掌握前端开发的核心技能。
+                </div>
+            </div>
+            
+            <div class="info-section">
+                <div class="info-title">学习领域</div>
+                <div class="info-content">编程 / 前端开发</div>
+            </div>
+            
+            <div class="info-section">
+                <div class="info-title">计划周期</div>
+                <div class="info-content">2024年5月1日 - 2024年8月31日（4个月）</div>
+            </div>
+            
+            <div class="info-section">
+                <div class="info-title">计划状态</div>
+                <div class="info-content">进行中（自动开始于2024年5月1日）</div>
+            </div>
+            
+            <div class="info-section">
+                <div class="info-title">创建方式</div>
+                <div class="info-content">AI生成</div>
+            </div>
+            
+            <div class="info-section">
+                <div class="info-title">创建时间</div>
+                <div class="info-content">2024年4月28日 14:30</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 浮动按钮 -->
+    <div class="fab-container">
+        <a href="task_create.html" class="fab">
+            <i class="fas fa-plus"></i>
+        </a>
+    </div>
+    
+    <!-- 底部导航栏 -->
+    <div class="bottom-nav">
+        <a href="#" class="nav-item">
+            <div class="nav-icon"><i class="fas fa-home"></i></div>
+            <div>首页</div>
+        </a>
+        <a href="plan_list.html" class="nav-item active">
+            <div class="nav-icon"><i class="fas fa-tasks"></i></div>
+            <div>计划</div>
+        </a>
+        <a href="#" class="nav-item">
+            <div class="nav-icon"><i class="fas fa-clock"></i></div>
+            <div>时间</div>
+        </a>
+        <a href="#" class="nav-item">
+            <div class="nav-icon"><i class="fas fa-magic"></i></div>
+            <div>AI工具</div>
+        </a>
+        <a href="../user/profile.html" class="nav-item">
+            <div class="nav-icon"><i class="fas fa-user"></i></div>
+            <div>我的</div>
+        </a>
+    </div>
+
+    <script src="../assets/js/main.js"></script>
+    <script>
+        function switchTab(tabId) {
+            // 更新标签页激活状态
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelector(`.tab[onclick="switchTab('${tabId}')"]`).classList.add('active');
+            
+            // 更新面板显示状态
+            document.querySelectorAll('.panel').forEach(panel => {
+                panel.classList.remove('active');
+            });
+            document.getElementById(`${tabId}-panel`).classList.add('active');
+        }
+        
+        // 为复选框添加点击事件
+        document.querySelectorAll('.task-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('click', function() {
+                if (!this.classList.contains('checked')) {
+                    this.classList.add('checked');
+                    this.querySelector('i').style.display = 'block';
+                    this.nextElementSibling.querySelector('.task-title').classList.add('completed');
+                }
+            });
+        });
+        
+        // 编辑任务
+        function editTask(event, taskId) {
+            event.stopPropagation();
+            window.location.href = `task_create.html?edit=${taskId}`;
+        }
+        
+        // 删除任务
+        function deleteTask(event, taskId) {
+            event.stopPropagation();
+            if (confirm('确定要删除此任务吗？')) {
+                alert('任务已删除');
+                // 在实际应用中，这里应该调用后端API删除任务
+                // 然后重新加载页面或从DOM中移除该元素
+            }
+        }
+    </script>
+</body>
+</html> 

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>创建计时任务 - 智能学习助手</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <style>
+        body {
+            background-color: var(--background);
+            color: var(--on-background);
+            font-family: var(--font-family);
+        }
+        
+        .form-section {
+            margin-bottom: 24px;
+        }
+        
+        .form-title {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 16px;
+            color: var(--on-surface);
+        }
+        
+        .timer-type-toggle {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        
+        .timer-type-option {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            border: 1px solid var(--outline);
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .timer-type-option:first-child {
+            border-radius: 8px 0 0 8px;
+        }
+        
+        .timer-type-option:last-child {
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .timer-type-option.active {
+            background-color: var(--primary-container);
+            color: var(--on-primary-container);
+            border-color: var(--primary);
+        }
+        
+        .timer-type-option i {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        
+        .timer-params {
+            background-color: var(--surface);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .number-input-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .number-input-group label {
+            flex: 2;
+            color: var(--on-surface);
+        }
+        
+        .number-input-controls {
+            flex: 3;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .number-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--surface-variant);
+            color: var(--on-surface-variant);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .number-value {
+            font-weight: 500;
+            min-width: 40px;
+            text-align: center;
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 32px;
+        }
+        
+        .section-separator {
+            height: 1px;
+            background-color: var(--surface-variant);
+            margin: 24px 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- 状态栏 -->
+    <div class="status-bar">
+        <div class="status-bar-time">12:00</div>
+        <div class="status-bar-icons">
+            <i class="fas fa-wifi"></i>
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-battery-full"></i>
+        </div>
+    </div>
+    
+    <!-- 应用栏 -->
+    <div class="app-bar">
+        <a href="timer_tasks.html" class="app-bar-back">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <div class="app-bar-title">创建计时任务</div>
+    </div>
+    
+    <!-- 主内容 -->
+    <div class="page-container">
+        <form>
+            <!-- 基本信息 -->
+            <div class="form-section">
+                <div class="form-title">基本信息</div>
+                <div class="material-input">
+                    <input type="text" id="taskName" placeholder=" " value="英语听力训练">
+                    <label for="taskName">任务名称</label>
+                </div>
+            </div>
+            
+            <!-- 计时方式 -->
+            <div class="form-section">
+                <div class="form-title">计时方式</div>
+                <div class="timer-type-toggle">
+                    <div class="timer-type-option active" id="pomodoroType">
+                        <i class="fas fa-hourglass-half"></i>
+                        <span>番茄钟</span>
+                    </div>
+                    <div class="timer-type-option" id="countdownType">
+                        <i class="fas fa-stopwatch"></i>
+                        <span>倒计时</span>
+                    </div>
+                    <div class="timer-type-option" id="freeType">
+                        <i class="fas fa-clock"></i>
+                        <span>自由计时</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 番茄钟参数设置 -->
+            <div id="pomodoroParams" class="timer-params">
+                <div class="number-input-group">
+                    <label>番茄数量</label>
+                    <div class="number-input-controls">
+                        <button type="button" class="number-btn" onclick="decrementValue('pomodoroCount')">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <span id="pomodoroCount" class="number-value">4</span>
+                        <button type="button" class="number-btn" onclick="incrementValue('pomodoroCount')">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="number-input-group">
+                    <label>每个番茄时长 (分钟)</label>
+                    <div class="number-input-controls">
+                        <button type="button" class="number-btn" onclick="decrementValue('pomodoroDuration')">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <span id="pomodoroDuration" class="number-value">25</span>
+                        <button type="button" class="number-btn" onclick="incrementValue('pomodoroDuration')">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="number-input-group">
+                    <label>休息时长 (分钟)</label>
+                    <div class="number-input-controls">
+                        <button type="button" class="number-btn" onclick="decrementValue('restDuration')">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <span id="restDuration" class="number-value">5</span>
+                        <button type="button" class="number-btn" onclick="incrementValue('restDuration')">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 倒计时参数设置（初始隐藏） -->
+            <div id="countdownParams" class="timer-params" style="display: none;">
+                <div class="number-input-group">
+                    <label>时长 (分钟)</label>
+                    <div class="number-input-controls">
+                        <button type="button" class="number-btn" onclick="decrementValue('customDuration')">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <span id="customDuration" class="number-value">60</span>
+                        <button type="button" class="number-btn" onclick="incrementValue('customDuration')">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 自由计时参数设置（初始隐藏，实际无需参数） -->
+            <div id="freeParams" class="timer-params" style="display: none;">
+                <p class="text-center" style="color: var(--on-surface-variant);">不限时长，点击开始后即可自由计时</p>
+            </div>
+            
+            <!-- 提交按钮 -->
+            <div class="form-actions">
+                <button type="button" class="btn material-btn-outline" onclick="location.href='timer_tasks.html'">取消</button>
+                <button type="button" class="btn material-btn" onclick="location.href='timer_tasks.html'">创建任务</button>
+            </div>
+        </form>
+    </div>
+    
+    <!-- 底部导航栏 -->
+    <div class="bottom-nav">
+        <a href="../plan/plan_list.html" class="bottom-nav-item">
+            <i class="fas fa-tasks bottom-nav-icon"></i>
+            <span>计划</span>
+        </a>
+        <a href="index.html" class="bottom-nav-item active">
+            <i class="fas fa-clock bottom-nav-icon"></i>
+            <span>时间</span>
+        </a>
+        <a href="#" class="bottom-nav-item">
+            <i class="fas fa-robot bottom-nav-icon"></i>
+            <span>AI工具</span>
+        </a>
+        <a href="../user/profile.html" class="bottom-nav-item">
+            <i class="fas fa-user bottom-nav-icon"></i>
+            <span>我的</span>
+        </a>
+    </div>
+
+    <script>
+        // 计时方式切换
+        document.getElementById('pomodoroType').addEventListener('click', function() {
+            setActiveTimerType('pomodoro');
+        });
+        
+        document.getElementById('countdownType').addEventListener('click', function() {
+            setActiveTimerType('countdown');
+        });
+        
+        document.getElementById('freeType').addEventListener('click', function() {
+            setActiveTimerType('free');
+        });
+        
+        function setActiveTimerType(type) {
+            // 重置所有选项和参数面板
+            document.getElementById('pomodoroType').classList.remove('active');
+            document.getElementById('countdownType').classList.remove('active');
+            document.getElementById('freeType').classList.remove('active');
+            
+            document.getElementById('pomodoroParams').style.display = 'none';
+            document.getElementById('countdownParams').style.display = 'none';
+            document.getElementById('freeParams').style.display = 'none';
+            
+            // 设置选中状态
+            document.getElementById(type + 'Type').classList.add('active');
+            document.getElementById(type + 'Params').style.display = 'block';
+        }
+        
+        // 数值加减
+        function incrementValue(id) {
+            const element = document.getElementById(id);
+            let value = parseInt(element.innerText);
+            
+            // 设置上限
+            let max = 999;
+            if (id === 'pomodoroCount') max = 12;
+            if (id === 'pomodoroDuration' || id === 'restDuration') max = 60;
+            
+            if (value < max) {
+                element.innerText = value + 1;
+            }
+        }
+        
+        function decrementValue(id) {
+            const element = document.getElementById(id);
+            let value = parseInt(element.innerText);
+            
+            // 设置下限
+            let min = 1;
+            if (id === 'restDuration') min = 0;
+            
+            if (value > min) {
+                element.innerText = value - 1;
+            }
+        }
+    </script>
+</body>
+</html> 

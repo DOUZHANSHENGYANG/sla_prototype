@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>创建学习阶段 - 智能学习助手</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <style>
+        body {
+            height: 100vh;
+            background-color: var(--background);
+            padding-bottom: 20px;
+        }
+        
+        .app-bar {
+            background-color: var(--primary);
+            color: var(--on-primary);
+            padding: 16px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .app-bar-back {
+            margin-right: 16px;
+            color: var(--on-primary);
+            font-size: 20px;
+        }
+        
+        .app-bar-title {
+            font-size: 18px;
+            font-weight: 500;
+            flex: 1;
+        }
+        
+        .create-container {
+            padding: 20px;
+        }
+        
+        .plan-info {
+            background-color: var(--primary-container);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+            color: var(--on-primary-container);
+        }
+        
+        .plan-title {
+            font-weight: 500;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+        
+        .form-group {
+            margin-bottom: 16px;
+        }
+        
+        .form-label {
+            font-size: 14px;
+            color: var(--on-surface);
+            margin-bottom: 8px;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--outline);
+            border-radius: 8px;
+            background-color: var(--surface);
+            color: var(--on-surface);
+            font-size: 14px;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(54, 94, 157, 0.1);
+        }
+        
+        .form-control::placeholder {
+            color: var(--on-surface-variant);
+        }
+        
+        .form-hint {
+            font-size: 12px;
+            color: var(--on-surface-variant);
+            margin-top: 4px;
+        }
+        
+        .date-group {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .date-group .form-group {
+            flex: 1;
+        }
+        
+        .btn-create {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--primary);
+            color: var(--on-primary);
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            margin-top: 24px;
+        }
+        
+        .ai-prompt-container {
+            background-color: var(--primary-container);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .ai-prompt-title {
+            font-weight: 500;
+            color: var(--on-primary-container);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .ai-prompt-title i {
+            margin-right: 8px;
+        }
+        
+        .ai-prompt-description {
+            font-size: 14px;
+            color: var(--on-primary-container);
+            margin-bottom: 16px;
+            opacity: 0.9;
+        }
+        
+        .create-type-switcher {
+            display: flex;
+            background-color: var(--surface-variant);
+            border-radius: 8px;
+            margin-bottom: 24px;
+            padding: 4px;
+        }
+        
+        .type-option {
+            flex: 1;
+            padding: 10px 0;
+            text-align: center;
+            font-size: 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            color: var(--on-surface-variant);
+        }
+        
+        .type-option.active {
+            background-color: var(--surface);
+            color: var(--primary);
+            font-weight: 500;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .form-panel {
+            display: none;
+        }
+        
+        .form-panel.active {
+            display: block;
+        }
+        
+        .loading-container {
+            display: none;
+            text-align: center;
+            padding: 30px 0;
+        }
+        
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--surface-variant);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            margin: 0 auto 16px;
+            animation: spin 1s linear infinite;
+        }
+        
+        .loading-text {
+            font-size: 14px;
+            color: var(--on-surface-variant);
+        }
+        
+        .warning-alert {
+            background-color: #FFF3E0;
+            border-left: 4px solid #FF9800;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 16px;
+            font-size: 13px;
+            color: #E65100;
+        }
+        
+        .warning-alert i {
+            margin-right: 8px;
+            color: #FF9800;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- 状态栏 -->
+    <div class="status-bar">
+        <div class="status-bar-time">12:00</div>
+        <div class="status-bar-icons">
+            <i class="fas fa-wifi"></i>
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-battery-full"></i>
+        </div>
+    </div>
+    
+    <!-- 应用栏 -->
+    <div class="app-bar">
+        <a href="plan_create.html" class="app-bar-back">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <div class="app-bar-title">创建学习阶段</div>
+    </div>
+    
+    <!-- 计划信息 -->
+    <div class="create-container">
+        <div class="plan-info">
+            <div class="plan-title">Web前端开发学习</div>
+            <div style="font-size: 12px;">2024.05.01 - 2024.08.31</div>
+        </div>
+        
+        <!-- 创建方式切换 -->
+        <div class="create-type-switcher">
+            <div class="type-option active" onclick="switchCreateType('manual')">手动创建</div>
+            <div class="type-option" onclick="switchCreateType('ai')">AI生成</div>
+        </div>
+        
+        <!-- 手动创建表单 -->
+        <div id="manual-form" class="form-panel active">
+            <div class="form-group">
+                <label class="form-label">阶段名称</label>
+                <input type="text" class="form-control" placeholder="请输入阶段名称" />
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">阶段描述</label>
+                <textarea class="form-control" rows="3" placeholder="请输入阶段描述"></textarea>
+                <div class="form-hint">简要描述本阶段的学习目标和内容</div>
+            </div>
+            
+            <div class="date-group">
+                <div class="form-group">
+                    <label class="form-label">开始日期</label>
+                    <input type="date" class="form-control" value="2024-07-01" />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">结束日期</label>
+                    <input type="date" class="form-control" value="2024-07-31" />
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">排序</label>
+                <input type="number" class="form-control" min="1" value="3" />
+                <div class="form-hint">此阶段在计划中的排序位置</div>
+            </div>
+            
+            <div class="warning-alert">
+                <i class="fas fa-exclamation-triangle"></i>
+                计划开始执行后，将无法调整阶段
+            </div>
+            
+            <button class="btn-create" onclick="createPhase('manual')">创建阶段</button>
+        </div>
+        
+        <!-- AI生成表单 -->
+        <div id="ai-form" class="form-panel">
+            <div class="ai-prompt-container">
+                <div class="ai-prompt-title">
+                    <i class="fas fa-robot"></i> AI阶段生成助手
+                </div>
+                <div class="ai-prompt-description">
+                    AI将根据计划内容和已有阶段，为你规划合适的学习阶段
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">学习主题</label>
+                <input type="text" class="form-control" placeholder="请输入本阶段的学习主题，如：JavaScript进阶" />
+            </div>
+            
+            <div class="date-group">
+                <div class="form-group">
+                    <label class="form-label">开始日期</label>
+                    <input type="date" class="form-control" value="2024-07-01" />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">结束日期</label>
+                    <input type="date" class="form-control" value="2024-07-31" />
+                </div>
+            </div>
+            
+            <div class="warning-alert">
+                <i class="fas fa-exclamation-triangle"></i>
+                计划开始执行后，将无法调整阶段
+            </div>
+            
+            <button class="btn-create" onclick="createPhase('ai')">生成阶段</button>
+            
+            <!-- 加载提示 -->
+            <div id="loading-container" class="loading-container">
+                <div class="loading-spinner"></div>
+                <div class="loading-text">正在生成学习阶段，请稍候...</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/main.js"></script>
+    <script>
+        function switchCreateType(type) {
+            // 更新标签页激活状态
+            document.querySelectorAll('.type-option').forEach(option => {
+                option.classList.remove('active');
+            });
+            document.querySelector(`.type-option[onclick="switchCreateType('${type}')"]`).classList.add('active');
+            
+            // 更新表单显示状态
+            document.querySelectorAll('.form-panel').forEach(panel => {
+                panel.classList.remove('active');
+            });
+            document.getElementById(`${type}-form`).classList.add('active');
+        }
+        
+        function createPhase(type) {
+            if (type === 'ai') {
+                // 显示加载状态
+                document.getElementById('loading-container').style.display = 'block';
+                
+                // 模拟异步请求
+                setTimeout(() => {
+                    document.getElementById('loading-container').style.display = 'none';
+                    alert('AI阶段生成成功');
+                    window.location.href = 'plan_create.html';
+                }, 2000);
+            } else {
+                // 创建成功后返回
+                alert('阶段创建成功');
+                window.location.href = 'plan_create.html';
+            }
+        }
+    </script>
+</body>
+</html> 

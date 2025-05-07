@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文档总结 - 智能学习助手</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <style>
+        body {
+            background-color: var(--background);
+            color: var(--on-background);
+            font-family: var(--font-family);
+        }
+        
+        .summary-header {
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        
+        .summary-header-title {
+            font-size: 20px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        
+        .summary-header-description {
+            color: var(--on-surface-variant);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .upload-area {
+            border: 2px dashed var(--outline);
+            border-radius: 16px;
+            padding: 32px;
+            text-align: center;
+            margin-bottom: 24px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .upload-area:hover {
+            border-color: var(--primary);
+            background-color: rgba(54, 94, 157, 0.05);
+        }
+        
+        .upload-icon {
+            font-size: 48px;
+            color: var(--on-surface-variant);
+            margin-bottom: 16px;
+            opacity: 0.7;
+        }
+        
+        .upload-title {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        
+        .upload-text {
+            color: var(--on-surface-variant);
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+        
+        .upload-formats {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        
+        .format-badge {
+            padding: 6px 12px;
+            background-color: var(--surface-variant);
+            color: var(--on-surface-variant);
+            border-radius: 16px;
+            font-size: 12px;
+        }
+        
+        .summary-type-selector {
+            margin: 24px 0;
+        }
+        
+        .summary-type-title {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+        
+        .summary-types {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            margin: 0 -16px;
+            padding-left: 16px;
+            padding-right: 16px;
+            scrollbar-width: none;
+        }
+        
+        .summary-types::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .summary-type-card {
+            flex: 0 0 200px;
+            border-radius: 12px;
+            background-color: var(--surface);
+            padding: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+        
+        .summary-type-card.active {
+            border-color: var(--primary);
+            background-color: var(--primary-container);
+        }
+        
+        .summary-type-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+        
+        .summary-type-icon {
+            color: var(--primary);
+            font-size: 24px;
+            margin-bottom: 12px;
+        }
+        
+        .summary-type-name {
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        
+        .summary-type-description {
+            font-size: 12px;
+            color: var(--on-surface-variant);
+            line-height: 1.4;
+        }
+        
+        .document-preview {
+            margin-top: 24px;
+            margin-bottom: 24px;
+            display: none;
+        }
+        
+        .document-card {
+            background-color: var(--surface);
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            display: flex;
+            align-items: center;
+        }
+        
+        .document-icon {
+            font-size: 32px;
+            color: var(--primary);
+            margin-right: 16px;
+        }
+        
+        .document-details {
+            flex: 1;
+        }
+        
+        .document-name {
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        
+        .document-meta {
+            font-size: 12px;
+            color: var(--on-surface-variant);
+        }
+        
+        .document-actions {
+            display: flex;
+            align-items: center;
+        }
+        
+        .document-action-button {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--surface-variant);
+            color: var(--on-surface-variant);
+            margin-left: 8px;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .summary-result {
+            margin-top: 24px;
+            margin-bottom: 32px;
+            display: none;
+        }
+        
+        .summary-card {
+            background-color: var(--primary-container);
+            border-radius: 16px;
+            padding: 20px;
+            color: var(--on-primary-container);
+            position: relative;
+        }
+        
+        .summary-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .summary-card-title {
+            font-weight: 500;
+            font-size: 18px;
+        }
+        
+        .summary-card-subtitle {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 16px;
+        }
+        
+        .summary-content {
+            line-height: 1.6;
+            font-size: 15px;
+            margin-bottom: 16px;
+        }
+        
+        .summary-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+        
+        .summary-action-button {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            cursor: pointer;
+            background-color: rgba(0, 0, 0, 0.1);
+            color: var(--on-primary-container);
+            border: none;
+        }
+        
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .loading-spinner {
+            width: 64px;
+            height: 64px;
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--on-primary);
+            animation: spin 1s linear infinite;
+            margin-bottom: 16px;
+        }
+        
+        .loading-text {
+            color: white;
+            font-size: 16px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .history-section {
+            margin-top: 32px;
+        }
+        
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .history-title {
+            font-size: 18px;
+            font-weight: 500;
+        }
+        
+        .clear-history {
+            color: var(--primary);
+            font-size: 14px;
+            cursor: pointer;
+        }
+        
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .history-item {
+            background-color: var(--surface);
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .history-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+        
+        .history-item-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .history-item-icon {
+            font-size: 20px;
+            color: var(--primary);
+            margin-right: 12px;
+        }
+        
+        .history-item-title {
+            font-weight: 500;
+            flex: 1;
+        }
+        
+        .history-item-date {
+            font-size: 12px;
+            color: var(--on-surface-variant);
+        }
+        
+        .history-item-preview {
+            font-size: 14px;
+            color: var(--on-surface-variant);
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    </style>
+</head>
+<body>
+    <!-- 状态栏 -->
+    <div class="status-bar">
+        <div class="status-bar-time">12:00</div>
+        <div class="status-bar-icons">
+            <i class="fas fa-wifi"></i>
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-battery-full"></i>
+        </div>
+    </div>
+    
+    <!-- 应用栏 -->
+    <div class="app-bar">
+        <a href="index.html" class="app-bar-back">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <div class="app-bar-title">文档总结</div>
+    </div>
+    
+    <!-- 主内容 -->
+    <div class="page-container">
+        <!-- 头部说明 -->
+        <div class="summary-header">
+            <div class="summary-header-title">AI智能文档总结</div>
+            <div class="summary-header-description">
+                上传学习资料，快速生成精准摘要，节省阅读时间，提高学习效率
+            </div>
+        </div>
+        
+        <!-- 上传区域 -->
+        <div class="upload-area" id="uploadArea">
+            <div class="upload-icon">
+                <i class="fas fa-file-upload"></i>
+            </div>
+            <div class="upload-title">上传文档</div>
+            <div class="upload-text">点击或拖拽文件到此处上传</div>
+            
+            <div class="upload-formats">
+                <div class="format-badge">PDF</div>
+                <div class="format-badge">DOCX</div>
+                <div class="format-badge">TXT</div>
+                <div class="format-badge">PPT</div>
+            </div>
+            
+            <button class="btn material-btn">
+                <i class="fas fa-folder-open"></i> 选择文件
+            </button>
+        </div>
+        
+        <!-- 摘要类型选择 -->
+        <div class="summary-type-selector">
+            <div class="summary-type-title">选择总结类型</div>
+            <div class="summary-types">
+                <div class="summary-type-card active">
+                    <div class="summary-type-icon">
+                        <i class="fas fa-compress-alt"></i>
+                    </div>
+                    <div class="summary-type-name">简洁摘要</div>
+                    <div class="summary-type-description">
+                        生成简短的文档概述，快速了解主要内容
+                    </div>
+                </div>
+                
+                <div class="summary-type-card">
+                    <div class="summary-type-icon">
+                        <i class="fas fa-list-ul"></i>
+                    </div>
+                    <div class="summary-type-name">要点提取</div>
+                    <div class="summary-type-description">
+                        提取文档中的关键要点，以列表形式呈现
+                    </div>
+                </div>
+                
+                <div class="summary-type-card">
+                    <div class="summary-type-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div class="summary-type-name">学习笔记</div>
+                    <div class="summary-type-description">
+                        生成适合学习的笔记，包含知识点和解释
+                    </div>
+                </div>
+                
+                <div class="summary-type-card">
+                    <div class="summary-type-icon">
+                        <i class="fas fa-question-circle"></i>
+                    </div>
+                    <div class="summary-type-name">问答生成</div>
+                    <div class="summary-type-description">
+                        根据文档内容生成问答对，帮助测试理解
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 文档预览 -->
+        <div class="document-preview" id="documentPreview">
+            <div class="document-card">
+                <div class="document-icon">
+                    <i class="fas fa-file-pdf"></i>
+                </div>
+                <div class="document-details">
+                    <div class="document-name">机器学习导论.pdf</div>
+                    <div class="document-meta">PDF文档 · 2.5MB · 36页</div>
+                </div>
+                <div class="document-actions">
+                    <button class="document-action-button" title="更换文件">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                    <button class="document-action-button" title="移除">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <button class="btn material-btn w-100 mt-3" id="generateSummaryBtn">
+                <i class="fas fa-magic"></i> 生成摘要
+            </button>
+        </div>
+        
+        <!-- 摘要结果 -->
+        <div class="summary-result" id="summaryResult">
+            <div class="summary-card">
+                <div class="summary-card-header">
+                    <div class="summary-card-title">文档摘要</div>
+                    <span>简洁摘要</span>
+                </div>
+                
+                <div class="summary-card-subtitle">机器学习导论.pdf</div>
+                
+                <div class="summary-content">
+                    机器学习是人工智能的一个分支，主要研究如何使计算机系统通过经验自动改进。本导论涵盖了机器学习的基本概念、主要算法和应用场景。<br><br>
+                    
+                    文档首先介绍了机器学习的定义和历史发展，然后详细讲解了监督学习、无监督学习和强化学习三大学习范式。在监督学习部分，重点讨论了回归、分类问题及常用算法如线性回归、决策树和支持向量机。无监督学习章节主要介绍了聚类和降维技术，包括K-means算法和主成分分析。强化学习部分则聚焦于智能体如何通过与环境的交互学习最优策略。<br><br>
+                    
+                    文档最后讨论了机器学习的最新进展，特别是深度学习技术及其在计算机视觉、自然语言处理等领域的应用，并探讨了相关的伦理和隐私问题。
+                </div>
+                
+                <div class="summary-actions">
+                    <button class="summary-action-button">
+                        <i class="fas fa-copy"></i> 复制
+                    </button>
+                    <button class="summary-action-button">
+                        <i class="fas fa-file-alt"></i> 保存为笔记
+                    </button>
+                    <button class="summary-action-button">
+                        <i class="fas fa-share-alt"></i> 分享
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 历史记录 -->
+        <div class="history-section">
+            <div class="history-header">
+                <div class="history-title">历史总结</div>
+                <div class="clear-history">清空历史</div>
+            </div>
+            
+            <div class="history-list">
+                <div class="history-item">
+                    <div class="history-item-header">
+                        <div class="history-item-icon">
+                            <i class="fas fa-file-pdf"></i>
+                        </div>
+                        <div class="history-item-title">机器学习导论.pdf</div>
+                        <div class="history-item-date">2023-05-20</div>
+                    </div>
+                    <div class="history-item-preview">
+                        机器学习是人工智能的一个分支，主要研究如何使计算机系统通过经验自动改进。本导论涵盖了机器学习的基本概念、主要算法和应用场景。
+                    </div>
+                </div>
+                
+                <div class="history-item">
+                    <div class="history-item-header">
+                        <div class="history-item-icon">
+                            <i class="fas fa-file-word"></i>
+                        </div>
+                        <div class="history-item-title">数据结构与算法分析.docx</div>
+                        <div class="history-item-date">2023-05-18</div>
+                    </div>
+                    <div class="history-item-preview">
+                        本文档详细介绍了计算机科学中最核心的数据结构和算法，包括数组、链表、栈、队列、树、图等基本数据结构，以及排序、搜索、动态规划等经典算法。
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 底部导航栏 -->
+    <div class="bottom-nav">
+        <a href="../plan/plan_list.html" class="bottom-nav-item">
+            <i class="fas fa-tasks bottom-nav-icon"></i>
+            <span>计划</span>
+        </a>
+        <a href="../timer/index.html" class="bottom-nav-item">
+            <i class="fas fa-clock bottom-nav-icon"></i>
+            <span>时间</span>
+        </a>
+        <a href="index.html" class="bottom-nav-item active">
+            <i class="fas fa-robot bottom-nav-icon"></i>
+            <span>AI工具</span>
+        </a>
+        <a href="../user/profile.html" class="bottom-nav-item">
+            <i class="fas fa-user bottom-nav-icon"></i>
+            <span>我的</span>
+        </a>
+    </div>
+    
+    <!-- 加载动画 -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">正在生成文档摘要...</div>
+    </div>
+    
+    <script>
+        // 模拟上传文件
+        document.getElementById('uploadArea').addEventListener('click', function() {
+            // 显示文档预览区域
+            document.getElementById('documentPreview').style.display = 'block';
+            // 滚动到预览区域
+            document.getElementById('documentPreview').scrollIntoView({behavior: 'smooth'});
+        });
+        
+        // 切换摘要类型
+        document.querySelectorAll('.summary-type-card').forEach(card => {
+            card.addEventListener('click', function() {
+                document.querySelector('.summary-type-card.active').classList.remove('active');
+                this.classList.add('active');
+            });
+        });
+        
+        // 模拟生成摘要
+        document.getElementById('generateSummaryBtn').addEventListener('click', function() {
+            // 显示加载动画
+            document.getElementById('loadingOverlay').style.display = 'flex';
+            
+            // 模拟加载延迟
+            setTimeout(function() {
+                // 隐藏加载动画
+                document.getElementById('loadingOverlay').style.display = 'none';
+                
+                // 显示摘要结果
+                document.getElementById('summaryResult').style.display = 'block';
+                
+                // 滚动到结果区域
+                document.getElementById('summaryResult').scrollIntoView({behavior: 'smooth'});
+            }, 2000);
+        });
+        
+        // 移除文档
+        document.querySelector('.document-actions .document-action-button:last-child').addEventListener('click', function() {
+            document.getElementById('documentPreview').style.display = 'none';
+            document.getElementById('summaryResult').style.display = 'none';
+        });
+    </script>
+</body>
+</html> 

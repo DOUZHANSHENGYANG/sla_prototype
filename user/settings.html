@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>设置 - 智能学习助手</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <style>
+        body {
+            height: 100vh;
+            background-color: var(--background);
+        }
+        
+        .app-bar {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            background-color: var(--primary);
+            color: var(--on-primary);
+        }
+        
+        .app-bar-back {
+            color: var(--on-primary);
+            font-size: 24px;
+            margin-right: 16px;
+        }
+        
+        .app-bar-title {
+            font-size: 18px;
+            font-weight: 500;
+        }
+        
+        .settings-container {
+            padding-bottom: 20px;
+        }
+        
+        .settings-section {
+            background-color: var(--surface);
+            margin-bottom: 15px;
+        }
+        
+        .section-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--on-surface-variant);
+            padding: 12px 16px;
+            margin: 0;
+            background-color: var(--surface-container);
+        }
+        
+        .settings-item {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            border-bottom: 1px solid var(--surface-variant);
+        }
+        
+        .settings-item:last-child {
+            border-bottom: none;
+        }
+        
+        .settings-icon {
+            width: 24px;
+            color: var(--primary);
+            margin-right: 16px;
+            font-size: 18px;
+            text-align: center;
+        }
+        
+        .settings-content {
+            flex: 1;
+        }
+        
+        .settings-title {
+            font-size: 16px;
+            color: var(--on-surface);
+            margin-bottom: 2px;
+        }
+        
+        .settings-subtitle {
+            font-size: 14px;
+            color: var(--on-surface-variant);
+        }
+        
+        .settings-action {
+            display: flex;
+            align-items: center;
+        }
+        
+        .settings-toggle {
+            position: relative;
+            width: 44px;
+            height: 24px;
+        }
+        
+        .toggle-checkbox {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--surface-variant);
+            transition: .4s;
+            border-radius: 34px;
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        .toggle-checkbox:checked + .toggle-slider {
+            background-color: var(--primary);
+        }
+        
+        .toggle-checkbox:checked + .toggle-slider:before {
+            transform: translateX(20px);
+        }
+        
+        .settings-chevron {
+            color: var(--on-surface-variant);
+        }
+        
+        .settings-badge {
+            background-color: var(--error);
+            color: var(--on-error);
+            border-radius: 20px;
+            padding: 2px 8px;
+            font-size: 12px;
+            margin-right: 8px;
+        }
+        
+        .logout-btn {
+            width: calc(100% - 32px);
+            margin: 16px;
+            padding: 12px;
+            background-color: var(--error);
+            color: var(--on-error);
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .version-info {
+            text-align: center;
+            color: var(--on-surface-variant);
+            font-size: 12px;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 状态栏 -->
+    <div class="status-bar">
+        <div class="status-bar-time">12:00</div>
+        <div class="status-bar-icons">
+            <i class="fas fa-wifi"></i>
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-battery-full"></i>
+        </div>
+    </div>
+    
+    <!-- 应用栏 -->
+    <div class="app-bar">
+        <a href="profile.html" class="app-bar-back">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <div class="app-bar-title">设置</div>
+    </div>
+    
+    <!-- 设置内容 -->
+    <div class="settings-container">
+        <!-- 常规设置 -->
+        <div class="settings-section">
+            <h3 class="section-title">常规设置</h3>
+            
+            <div class="settings-item">
+                <div class="settings-icon">
+                    <i class="fas fa-bell"></i>
+                </div>
+                <div class="settings-content">
+                    <div class="settings-title">通知设置</div>
+                </div>
+                <div class="settings-action">
+                    <i class="fas fa-chevron-right settings-chevron"></i>
+                </div>
+            </div>
+            
+            <div class="settings-item">
+                <div class="settings-icon">
+                    <i class="fas fa-moon"></i>
+                </div>
+                <div class="settings-content">
+                    <div class="settings-title">深色模式</div>
+                    <div class="settings-subtitle">跟随系统</div>
+                </div>
+                <div class="settings-action">
+                    <i class="fas fa-chevron-right settings-chevron"></i>
+                </div>
+            </div>
+            
+            <div class="settings-item">
+                <div class="settings-icon">
+                    <i class="fas fa-globe"></i>
+                </div>
+                <div class="settings-content">
+                    <div class="settings-title">语言</div>
+                    <div class="settings-subtitle">简体中文</div>
+                </div>
+                <div class="settings-action">
+                    <i class="fas fa-chevron-right settings-chevron"></i>
+                </div>
+            </div>
+            
+            <div class="settings-item">
+                <div class="settings-icon">
+                    <i class="fas fa-font"></i>
+                </div>
+                <div class="settings-content">
+                    <div class="settings-title">字体大小</div>
+                    <div class="settings-subtitle">中</div>
+                </div>
+                <div class="settings-action">
+                    <i class="fas fa-chevron-right settings-chevron"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 学习设置 -->
+        <div class="settings-section">
+            <h3 class="section-title">学习设置</h3>
+            
+            <div class="settings-item">
+                <div class="settings-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="settings-content">
+                    <div class="settings-title">番茄钟设置</div>
+                    <div class="settings-subtitle">工作25分钟，休息5分钟</div>
+                </div>
+                <div class="settings-action">
+                    <i class="fas fa-chevron-right settings-chevron"></i>
+                </div>
+            </div>
+            
+            <div class="settings-item">
+                <div class="settings-icon">
+                    <i class="fas fa-volume-up"></i>
+                </div>
+                <div class="settings-content">
+                    <div class="settings-title">声音设置</div>
+                </div>
+                <div class="settings-action">
+                    <i class="fas fa-chevron-right settings-chevron"></i>
+                </div>
+            </div>
+            
+            <div class="settings-item">
+                <div class="settings-icon">
+                    <i class="fas fa-chart-bar"></i>
+                </div>
+                <div class="settings-content">
+                    <div class="settings-title">每周学习目标</div>
+                    <div class="settings-subtitle">20小时</div>
+                </div>
+                <div class="settings-action">
+                    <i class="fas fa-chevron-right settings-chevron"></i>
+                </div>
+            </div>
+            
+            <div class="settings-item">
+                <div class="settings-icon">
+                    <i class="fas fa-bell-slash"></i>
+                </div>
+                <div class="settings-content">
+                    <div class="settings-title">学习时免打扰</div>
+                </div>
+                <div class="settings-action">
+                    <label class="settings-toggle">
+                        <input type="checkbox" class="toggle-checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 隐私与安全 -->
+        <div class="settings-section">
+            <h3 class="section-title">隐私与安全</h3>
+            
+            <div class="settings-item">
+                <div class="settings-icon">
+                    <i class="fas fa-user-shield"></i>
+                </div>
+                <div class="settings-content">
+                    <div class="settings-title">隐私设置</div>
+                </div>
+                <div class="settings-action">
+                    <i class="fas fa-chevron-right settings-chevron"></i>
+                </div>
+            </div>
+            
+            <div class="settings-item">
+                <div class="settings-icon">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <div class="settings-content">
+                    <div class="settings-title">修改密码</div>
+                </div>
+                <div class="settings-action">
+                    <i class="fas fa-chevron-right settings-chevron"></i>
+                </div>
+            </div>
+            
+            <div class="settings-item">
+                <div class="settings-icon">
+                    <i class="fas fa-trash-alt"></i>
+                </div>
+                <div class="settings-content">
+                    <div class="settings-title">清除缓存</div>
+                    <div class="settings-subtitle">24.5 MB</div>
+                </div>
+                <div class="settings-action">
+                    <i class="fas fa-chevron-right settings-chevron"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 关于 -->
+        <div class="settings-section">
+            <h3 class="section-title">关于</h3>
+            
+            <div class="settings-item">
+                <div class="settings-icon">
+                    <i class="fas fa-info-circle"></i>
+                </div>
+                <div class="settings-content">
+                    <div class="settings-title">关于我们</div>
+                </div>
+                <div class="settings-action">
+                    <i class="fas fa-chevron-right settings-chevron"></i>
+                </div>
+            </div>
+            
+            <div class="settings-item">
+                <div class="settings-icon">
+                    <i class="fas fa-question-circle"></i>
+                </div>
+                <div class="settings-content">
+                    <div class="settings-title">帮助与反馈</div>
+                </div>
+                <div class="settings-action">
+                    <i class="fas fa-chevron-right settings-chevron"></i>
+                </div>
+            </div>
+            
+            <div class="settings-item">
+                <div class="settings-icon">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <div class="settings-content">
+                    <div class="settings-title">用户协议</div>
+                </div>
+                <div class="settings-action">
+                    <i class="fas fa-chevron-right settings-chevron"></i>
+                </div>
+            </div>
+            
+            <div class="settings-item">
+                <div class="settings-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="settings-content">
+                    <div class="settings-title">隐私政策</div>
+                </div>
+                <div class="settings-action">
+                    <i class="fas fa-chevron-right settings-chevron"></i>
+                </div>
+            </div>
+            
+            <div class="settings-item">
+                <div class="settings-icon">
+                    <i class="fas fa-sync"></i>
+                </div>
+                <div class="settings-content">
+                    <div class="settings-title">检查更新</div>
+                    <div class="settings-subtitle">当前版本：1.0.0</div>
+                </div>
+                <div class="settings-action">
+                    <span class="settings-badge">NEW</span>
+                    <i class="fas fa-chevron-right settings-chevron"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 退出登录按钮 -->
+        <button class="logout-btn" onclick="window.location.href='login.html'">
+            退出登录
+        </button>
+        
+        <div class="version-info">
+            智能学习助手 v1.0.0<br>
+            © 2024 All Rights Reserved
+        </div>
+    </div>
+
+    <script src="../assets/js/main.js"></script>
+</body>
+</html> 

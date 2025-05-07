@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能对话助手 - 智能学习助手</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <style>
+        body {
+            background-color: var(--background);
+            color: var(--on-background);
+            font-family: var(--font-family);
+        }
+        
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 160px);
+        }
+        
+        .chat-header {
+            background-color: var(--primary-container);
+            color: var(--on-primary-container);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .chat-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 24px;
+            background-color: var(--primary);
+            color: var(--on-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-right: 12px;
+        }
+        
+        .chat-info {
+            flex: 1;
+        }
+        
+        .chat-title {
+            font-weight: 500;
+            font-size: 18px;
+            margin-bottom: 4px;
+        }
+        
+        .chat-subtitle {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        .chat-actions {
+            display: flex;
+            align-items: center;
+        }
+        
+        .chat-action-button {
+            width: 36px;
+            height: 36px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--on-primary-container);
+            background-color: rgba(0, 0, 0, 0.1);
+            margin-left: 8px;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 0;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .message {
+            max-width: 80%;
+            margin-bottom: 16px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .message-user {
+            align-self: flex-end;
+        }
+        
+        .message-ai {
+            align-self: flex-start;
+        }
+        
+        .message-content {
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 15px;
+            line-height: 1.5;
+            margin-bottom: 4px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        .message-user .message-content {
+            background-color: var(--primary);
+            color: var(--on-primary);
+            border-bottom-right-radius: 4px;
+        }
+        
+        .message-ai .message-content {
+            background-color: var(--surface);
+            color: var(--on-surface);
+            border-bottom-left-radius: 4px;
+        }
+        
+        .message-time {
+            font-size: 12px;
+            color: var(--on-surface-variant);
+            opacity: 0.8;
+            align-self: flex-end;
+        }
+        
+        .message-ai .message-time {
+            align-self: flex-start;
+        }
+        
+        .message-typing {
+            display: flex;
+            padding: 12px;
+            background-color: var(--surface);
+            border-radius: 18px;
+            margin-bottom: 16px;
+            align-self: flex-start;
+            max-width: 80px;
+        }
+        
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--on-surface-variant);
+            border-radius: 50%;
+            margin: 0 2px;
+            opacity: 0.6;
+            animation: typingAnimation 1.5s infinite ease-in-out;
+        }
+        
+        .typing-dot:nth-child(1) {
+            animation-delay: 0s;
+        }
+        
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.3s;
+        }
+        
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.6s;
+        }
+        
+        @keyframes typingAnimation {
+            0% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+        
+        .chat-input-container {
+            padding: 12px 0;
+            position: relative;
+        }
+        
+        .chat-input-wrapper {
+            display: flex;
+            align-items: flex-end;
+            background-color: var(--surface);
+            border-radius: 24px;
+            padding: 12px 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .chat-input {
+            flex: 1;
+            border: none;
+            background-color: transparent;
+            resize: none;
+            max-height: 120px;
+            min-height: 24px;
+            padding: 0;
+            margin-right: 12px;
+            font-size: 15px;
+            color: var(--on-surface);
+            outline: none;
+        }
+        
+        .chat-tools {
+            display: flex;
+            align-items: center;
+            margin-right: 12px;
+        }
+        
+        .chat-tool-button {
+            width: 32px;
+            height: 32px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--on-surface-variant);
+            margin-left: 8px;
+            cursor: pointer;
+            background-color: transparent;
+            border: none;
+        }
+        
+        .chat-send-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--primary);
+            color: var(--on-primary);
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .chat-send-button:hover {
+            transform: scale(1.05);
+        }
+        
+        .suggestions {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding: 8px 0;
+            margin-bottom: 8px;
+            scrollbar-width: none;
+        }
+        
+        .suggestions::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .suggestion-chip {
+            padding: 8px 12px;
+            background-color: var(--surface-variant);
+            color: var(--on-surface-variant);
+            border-radius: 16px;
+            white-space: nowrap;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .suggestion-chip:hover {
+            background-color: var(--primary-container);
+            color: var(--on-primary-container);
+        }
+        
+        .chat-options {
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            right: 0;
+            background-color: var(--surface);
+            border-radius: 16px 16px 0 0;
+            padding: 16px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            display: none;
+            z-index: 10;
+        }
+        
+        .chat-options-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .chat-options-title {
+            font-weight: 500;
+            font-size: 16px;
+        }
+        
+        .chat-options-close {
+            width: 32px;
+            height: 32px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--surface-variant);
+            color: var(--on-surface-variant);
+            cursor: pointer;
+            border: none;
+        }
+        
+        .chat-option-group {
+            margin-bottom: 16px;
+        }
+        
+        .chat-option-label {
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .chat-option-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .chat-option-button {
+            padding: 8px 16px;
+            background-color: var(--surface-variant);
+            color: var(--on-surface-variant);
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+        
+        .chat-option-button.active {
+            background-color: var(--primary);
+            color: var(--on-primary);
+        }
+        
+        .with-badge {
+            position: relative;
+        }
+        
+        .badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: var(--error);
+            color: var(--on-error);
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .message-with-file {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .message-file {
+            display: flex;
+            align-items: center;
+            background-color: var(--surface);
+            border-radius: 12px;
+            padding: 10px;
+            margin-top: 8px;
+            margin-bottom: 8px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        .file-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background-color: var(--primary-container);
+            color: var(--on-primary-container);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 20px;
+        }
+        
+        .file-info {
+            flex: 1;
+        }
+        
+        .file-name {
+            font-weight: 500;
+            margin-bottom: 4px;
+            font-size: 14px;
+        }
+        
+        .file-size {
+            font-size: 12px;
+            color: var(--on-surface-variant);
+        }
+    </style>
+</head>
+<body>
+    <!-- 状态栏 -->
+    <div class="status-bar">
+        <div class="status-bar-time">12:00</div>
+        <div class="status-bar-icons">
+            <i class="fas fa-wifi"></i>
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-battery-full"></i>
+        </div>
+    </div>
+    
+    <!-- 应用栏 -->
+    <div class="app-bar">
+        <a href="index.html" class="app-bar-back">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <div class="app-bar-title">智能对话助手</div>
+    </div>
+    
+    <!-- 主内容 -->
+    <div class="page-container">
+        <div class="chat-container">
+            <!-- 头部信息 -->
+            <div class="chat-header">
+                <div class="chat-avatar">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="chat-info">
+                    <div class="chat-title">学习智能助手</div>
+                    <div class="chat-subtitle">随时为您解答学习问题</div>
+                </div>
+                <div class="chat-actions">
+                    <button class="chat-action-button" id="showOptionsBtn">
+                        <i class="fas fa-sliders-h"></i>
+                    </button>
+                    <button class="chat-action-button">
+                        <i class="fas fa-history"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 快捷提问建议 -->
+            <div class="suggestions">
+                <div class="suggestion-chip">如何提高英语口语水平？</div>
+                <div class="suggestion-chip">请解释一下光合作用的过程</div>
+                <div class="suggestion-chip">牛顿三大定律是什么？</div>
+                <div class="suggestion-chip">推荐几本历史类书籍</div>
+                <div class="suggestion-chip">帮我制定一个学习计划</div>
+            </div>
+            
+            <!-- 聊天消息 -->
+            <div class="chat-messages" id="chatMessages">
+                <!-- AI 欢迎消息 -->
+                <div class="message message-ai">
+                    <div class="message-content">
+                        你好！我是你的学习智能助手，有任何学习上的问题都可以问我。我可以帮你解答题目、讲解知识点、提供学习建议等。请问有什么可以帮到你的吗？
+                    </div>
+                    <div class="message-time">12:00</div>
+                </div>
+                
+                <!-- 用户消息 -->
+                <div class="message message-user">
+                    <div class="message-content">
+                        你能帮我理解微积分中的链式法则吗？
+                    </div>
+                    <div class="message-time">12:01</div>
+                </div>
+                
+                <!-- AI 回复 -->
+                <div class="message message-ai">
+                    <div class="message-content">
+                        当然可以！链式法则是微积分中求复合函数导数的一个基本法则。<br><br>
+                        
+                        假设 y = f(g(x))，即 y 是 g(x) 的函数，而 g(x) 又是 x 的函数，那么链式法则告诉我们：<br><br>
+                        
+                        dy/dx = (dy/du) × (du/dx)，其中 u = g(x)<br><br>
+                        
+                        换句话说，如果 y = f(u) 且 u = g(x)，那么：<br>
+                        y′ = f′(g(x)) × g′(x)<br><br>
+                        
+                        一个简单的例子：如果 y = sin(x²)，我们可以设 u = x²，则 y = sin(u)。<br>
+                        应用链式法则：<br>
+                        dy/dx = (dy/du) × (du/dx) = cos(u) × 2x = cos(x²) × 2x = 2x·cos(x²)<br><br>
+                        
+                        这个法则可以扩展到多重复合函数，你有什么不理解的地方吗？
+                    </div>
+                    <div class="message-time">12:01</div>
+                </div>
+                
+                <!-- 用户消息 with 文件 -->
+                <div class="message message-user message-with-file">
+                    <div class="message-content">
+                        我有一道题不太明白，能帮我看一下吗？
+                    </div>
+                    <div class="message-file">
+                        <div class="file-icon">
+                            <i class="fas fa-image"></i>
+                        </div>
+                        <div class="file-info">
+                            <div class="file-name">微积分习题.jpg</div>
+                            <div class="file-size">2.3 MB</div>
+                        </div>
+                    </div>
+                    <div class="message-time">12:05</div>
+                </div>
+                
+                <!-- AI 打字中 -->
+                <div class="message-typing" id="typingIndicator" style="display: none;">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            </div>
+            
+            <!-- 聊天输入框 -->
+            <div class="chat-input-container">
+                <div class="chat-input-wrapper">
+                    <div class="chat-tools">
+                        <button class="chat-tool-button" title="上传文件">
+                            <i class="fas fa-paperclip"></i>
+                        </button>
+                        <button class="chat-tool-button" title="语音输入">
+                            <i class="fas fa-microphone"></i>
+                        </button>
+                    </div>
+                    <textarea class="chat-input" placeholder="输入消息..." rows="1" id="chatInput"></textarea>
+                    <button class="chat-send-button" id="sendMessageBtn">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 对话选项面板 -->
+            <div class="chat-options" id="chatOptions">
+                <div class="chat-options-header">
+                    <div class="chat-options-title">对话设置</div>
+                    <button class="chat-options-close" id="closeOptionsBtn">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="chat-option-group">
+                    <div class="chat-option-label">回答风格</div>
+                    <div class="chat-option-buttons">
+                        <button class="chat-option-button active">简洁</button>
+                        <button class="chat-option-button">详细</button>
+                        <button class="chat-option-button">通俗易懂</button>
+                        <button class="chat-option-button">专业术语</button>
+                    </div>
+                </div>
+                
+                <div class="chat-option-group">
+                    <div class="chat-option-label">学科偏好</div>
+                    <div class="chat-option-buttons">
+                        <button class="chat-option-button">数学</button>
+                        <button class="chat-option-button active">物理</button>
+                        <button class="chat-option-button">化学</button>
+                        <button class="chat-option-button">语文</button>
+                        <button class="chat-option-button">英语</button>
+                    </div>
+                </div>
+                
+                <div class="chat-option-group">
+                    <div class="chat-option-label">其他设置</div>
+                    <div class="chat-option-buttons">
+                        <button class="chat-option-button">清空聊天</button>
+                        <button class="chat-option-button">导出对话</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 底部导航栏 -->
+    <div class="bottom-nav">
+        <a href="../plan/plan_list.html" class="bottom-nav-item">
+            <i class="fas fa-tasks bottom-nav-icon"></i>
+            <span>计划</span>
+        </a>
+        <a href="../timer/index.html" class="bottom-nav-item">
+            <i class="fas fa-clock bottom-nav-icon"></i>
+            <span>时间</span>
+        </a>
+        <a href="index.html" class="bottom-nav-item active">
+            <i class="fas fa-robot bottom-nav-icon"></i>
+            <span>AI工具</span>
+        </a>
+        <a href="../user/profile.html" class="bottom-nav-item">
+            <i class="fas fa-user bottom-nav-icon"></i>
+            <span>我的</span>
+        </a>
+    </div>
+    
+    <script>
+        // 发送消息
+        document.getElementById('sendMessageBtn').addEventListener('click', function() {
+            const inputField = document.getElementById('chatInput');
+            const message = inputField.value.trim();
+            
+            if (message) {
+                // 添加用户消息
+                addMessage(message, true);
+                
+                // 清空输入框
+                inputField.value = '';
+                
+                // 显示AI正在输入状态
+                document.getElementById('typingIndicator').style.display = 'flex';
+                
+                // 滚动到底部
+                scrollToBottom();
+                
+                // 模拟AI响应延迟
+                setTimeout(function() {
+                    // 隐藏输入状态
+                    document.getElementById('typingIndicator').style.display = 'none';
+                    
+                    // 添加AI回复
+                    const aiReply = "我理解你的问题，链式法则确实是微积分中非常重要的概念。多重复合函数的求导也遵循同样的原理，只需要从外到内一层层应用链式法则。你还有其他关于微积分的问题吗？";
+                    addMessage(aiReply, false);
+                    
+                    // 滚动到底部
+                    scrollToBottom();
+                }, 2000);
+            }
+        });
+        
+        // 添加消息到聊天框
+        function addMessage(content, isUser) {
+            const chatMessages = document.getElementById('chatMessages');
+            const now = new Date();
+            const time = now.getHours() + ':' + (now.getMinutes() < 10 ? '0' : '') + now.getMinutes();
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message message-${isUser ? 'user' : 'ai'}`;
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            contentDiv.textContent = content;
+            
+            const timeDiv = document.createElement('div');
+            timeDiv.className = 'message-time';
+            timeDiv.textContent = time;
+            
+            messageDiv.appendChild(contentDiv);
+            messageDiv.appendChild(timeDiv);
+            
+            chatMessages.appendChild(messageDiv);
+        }
+        
+        // 滚动到底部
+        function scrollToBottom() {
+            const chatMessages = document.getElementById('chatMessages');
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        // 处理输入框高度自适应
+        document.getElementById('chatInput').addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+        
+        // Enter键发送消息（Shift+Enter换行）
+        document.getElementById('chatInput').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                document.getElementById('sendMessageBtn').click();
+            }
+        });
+        
+        // 显示选项面板
+        document.getElementById('showOptionsBtn').addEventListener('click', function() {
+            document.getElementById('chatOptions').style.display = 'block';
+        });
+        
+        // 关闭选项面板
+        document.getElementById('closeOptionsBtn').addEventListener('click', function() {
+            document.getElementById('chatOptions').style.display = 'none';
+        });
+        
+        // 点击建议提问
+        document.querySelectorAll('.suggestion-chip').forEach(chip => {
+            chip.addEventListener('click', function() {
+                document.getElementById('chatInput').value = this.textContent;
+                document.getElementById('sendMessageBtn').click();
+            });
+        });
+        
+        // 切换选项按钮状态
+        document.querySelectorAll('.chat-option-button').forEach(button => {
+            button.addEventListener('click', function() {
+                if (!this.parentElement.querySelector('.chat-option-button.active') ||
+                    (this.parentElement.querySelector('.chat-option-button.active') &&
+                     this.textContent === '清空聊天' || this.textContent === '导出对话')) {
+                    // 不需要切换状态的按钮
+                } else {
+                    // 清除同组中其他按钮的active状态
+                    this.parentElement.querySelectorAll('.chat-option-button').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    // 设置当前按钮为active
+                    this.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

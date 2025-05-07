@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>时间管理 - 智能学习助手</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <style>
+        body {
+            background-color: var(--background);
+            color: var(--on-background);
+            font-family: var(--font-family);
+        }
+
+        .page-content {
+            padding-bottom: 80px;
+        }
+
+        .module-selector {
+            margin: 20px 0;
+        }
+        
+        .module-toggle {
+            display: flex;
+            background-color: var(--surface-variant);
+            border-radius: 24px;
+            overflow: hidden;
+            width: 100%;
+            margin-bottom: 24px;
+        }
+        
+        .module-toggle-btn {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            border: none;
+            background: transparent;
+            color: var(--on-surface-variant);
+        }
+        
+        .module-toggle-btn.active {
+            background-color: var(--primary);
+            color: var(--on-primary);
+        }
+        
+        .feature-card {
+            background-color: var(--surface);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--primary-container);
+            border-radius: 50%;
+            color: var(--on-primary-container);
+            font-size: 24px;
+            margin-right: 20px;
+        }
+        
+        .feature-content {
+            flex: 1;
+        }
+        
+        .feature-title {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+        
+        .feature-description {
+            color: var(--on-surface-variant);
+            font-size: 14px;
+        }
+        
+        .stats-card {
+            background-color: var(--surface);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .stats-title {
+            color: var(--on-surface-variant);
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        
+        .stats-value {
+            color: var(--on-surface);
+            font-size: 24px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <!-- 状态栏 -->
+    <div class="status-bar">
+        <div class="status-bar-time">12:00</div>
+        <div class="status-bar-icons">
+            <i class="fas fa-wifi"></i>
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-battery-full"></i>
+        </div>
+    </div>
+    
+    <!-- 应用栏 -->
+    <div class="app-bar">
+        <a href="../index.html" class="app-bar-back">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <div class="app-bar-title">时间管理</div>
+    </div>
+    
+    <!-- 主内容 -->
+    <div class="page-container">
+        <!-- 模块选择器 -->
+        <div class="module-selector">
+            <div class="module-toggle">
+                <button class="module-toggle-btn active" id="timerTab">计时器</button>
+                <button class="module-toggle-btn" id="studyRoomTab">自习室</button>
+            </div>
+        </div>
+        
+        <!-- 计时器模块 -->
+        <div class="module-content" id="timerContent">
+            <!-- 快速统计卡片 -->
+            <div class="row">
+                <div class="col-6">
+                    <div class="stats-card">
+                        <div class="stats-title">今日专注</div>
+                        <div class="stats-value">120 分钟</div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="stats-card">
+                        <div class="stats-title">完成任务</div>
+                        <div class="stats-value">3 个</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 功能入口 -->
+            <div class="feature-card" onclick="location.href='timer_tasks.html'">
+                <div class="feature-icon">
+                    <i class="fas fa-list-check"></i>
+                </div>
+                <div class="feature-content">
+                    <div class="feature-title">任务列表</div>
+                    <div class="feature-description">管理所有计时任务，开始新的专注计时</div>
+                </div>
+                <i class="fas fa-chevron-right" style="color: var(--outline);"></i>
+            </div>
+            
+            <div class="feature-card" onclick="location.href='timer_create.html'">
+                <div class="feature-icon">
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div class="feature-content">
+                    <div class="feature-title">新建任务</div>
+                    <div class="feature-description">创建新的专注任务，设置番茄钟或倒计时</div>
+                </div>
+                <i class="fas fa-chevron-right" style="color: var(--outline);"></i>
+            </div>
+            
+            <div class="feature-card" onclick="location.href='timer_statistics.html'">
+                <div class="feature-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="feature-content">
+                    <div class="feature-title">专注统计</div>
+                    <div class="feature-description">查看历史专注数据和完成情况</div>
+                </div>
+                <i class="fas fa-chevron-right" style="color: var(--outline);"></i>
+            </div>
+        </div>
+        
+        <!-- 自习室模块（默认隐藏） -->
+        <div class="module-content" id="studyRoomContent" style="display: none;">
+            <!-- 快速统计卡片 -->
+            <div class="row">
+                <div class="col-6">
+                    <div class="stats-card">
+                        <div class="stats-title">我的自习室</div>
+                        <div class="stats-value">1 个</div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="stats-card">
+                        <div class="stats-title">今日自习</div>
+                        <div class="stats-value">3 小时</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 功能入口 -->
+            <div class="feature-card" onclick="location.href='room_list.html'">
+                <div class="feature-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="feature-content">
+                    <div class="feature-title">自习室列表</div>
+                    <div class="feature-description">查看所有可加入的自习室</div>
+                </div>
+                <i class="fas fa-chevron-right" style="color: var(--outline);"></i>
+            </div>
+            
+            <div class="feature-card" onclick="location.href='room_mine.html'">
+                <div class="feature-icon">
+                    <i class="fas fa-door-open"></i>
+                </div>
+                <div class="feature-content">
+                    <div class="feature-title">我的自习室</div>
+                    <div class="feature-description">查看我创建和加入的自习室</div>
+                </div>
+                <i class="fas fa-chevron-right" style="color: var(--outline);"></i>
+            </div>
+            
+            <div class="feature-card" onclick="location.href='room_create.html'">
+                <div class="feature-icon">
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div class="feature-content">
+                    <div class="feature-title">创建自习室</div>
+                    <div class="feature-description">创建一个新的自习室，邀请好友一起学习</div>
+                </div>
+                <i class="fas fa-chevron-right" style="color: var(--outline);"></i>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 底部导航栏 -->
+    <div class="bottom-nav">
+        <a href="../plan/plan_list.html" class="bottom-nav-item">
+            <i class="fas fa-tasks bottom-nav-icon"></i>
+            <span>计划</span>
+        </a>
+        <a href="#" class="bottom-nav-item active">
+            <i class="fas fa-clock bottom-nav-icon"></i>
+            <span>时间</span>
+        </a>
+        <a href="#" class="bottom-nav-item">
+            <i class="fas fa-robot bottom-nav-icon"></i>
+            <span>AI工具</span>
+        </a>
+        <a href="../user/profile.html" class="bottom-nav-item">
+            <i class="fas fa-user bottom-nav-icon"></i>
+            <span>我的</span>
+        </a>
+    </div>
+
+    <script>
+        // 切换计时器和自习室模块
+        document.getElementById('timerTab').addEventListener('click', function() {
+            document.getElementById('timerTab').classList.add('active');
+            document.getElementById('studyRoomTab').classList.remove('active');
+            document.getElementById('timerContent').style.display = 'block';
+            document.getElementById('studyRoomContent').style.display = 'none';
+        });
+        
+        document.getElementById('studyRoomTab').addEventListener('click', function() {
+            document.getElementById('studyRoomTab').classList.add('active');
+            document.getElementById('timerTab').classList.remove('active');
+            document.getElementById('studyRoomContent').style.display = 'block';
+            document.getElementById('timerContent').style.display = 'none';
+        });
+    </script>
+</body>
+</html> 

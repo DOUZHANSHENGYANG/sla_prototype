@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>创建任务 - 智能学习助手</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <style>
+        body {
+            height: 100vh;
+            background-color: var(--background);
+            padding-bottom: 20px;
+        }
+        
+        .app-bar {
+            background-color: var(--primary);
+            color: var(--on-primary);
+            padding: 16px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .app-bar-back {
+            margin-right: 16px;
+            color: var(--on-primary);
+            font-size: 20px;
+        }
+        
+        .app-bar-title {
+            font-size: 18px;
+            font-weight: 500;
+            flex: 1;
+        }
+        
+        .create-container {
+            padding: 20px;
+        }
+        
+        .section-title {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 16px;
+            color: var(--on-surface);
+        }
+        
+        .create-type-switcher {
+            display: flex;
+            background-color: var(--surface-variant);
+            border-radius: 8px;
+            margin-bottom: 24px;
+            padding: 4px;
+        }
+        
+        .type-option {
+            flex: 1;
+            padding: 10px 0;
+            text-align: center;
+            font-size: 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            color: var(--on-surface-variant);
+        }
+        
+        .type-option.active {
+            background-color: var(--surface);
+            color: var(--primary);
+            font-weight: 500;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .form-panel {
+            display: none;
+        }
+        
+        .form-panel.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 16px;
+        }
+        
+        .form-label {
+            font-size: 14px;
+            color: var(--on-surface);
+            margin-bottom: 8px;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--outline);
+            border-radius: 8px;
+            background-color: var(--surface);
+            color: var(--on-surface);
+            font-size: 14px;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(54, 94, 157, 0.1);
+        }
+        
+        .form-control::placeholder {
+            color: var(--on-surface-variant);
+        }
+        
+        .form-hint {
+            font-size: 12px;
+            color: var(--on-surface-variant);
+            margin-top: 4px;
+        }
+        
+        .plan-phase-info {
+            background-color: var(--primary-container);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+            color: var(--on-primary-container);
+        }
+        
+        .plan-title {
+            font-weight: 500;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+        
+        .phase-title {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+        
+        .phase-order {
+            width: 24px;
+            height: 24px;
+            background-color: rgba(0, 0, 0, 0.1);
+            color: var(--on-primary-container);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            margin-right: 8px;
+        }
+        
+        .date-group {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .date-group .form-group {
+            flex: 1;
+        }
+        
+        .btn-create {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--primary);
+            color: var(--on-primary);
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            margin-top: 24px;
+        }
+        
+        .ai-prompt-container {
+            background-color: var(--primary-container);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .ai-prompt-title {
+            font-weight: 500;
+            color: var(--on-primary-container);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .ai-prompt-title i {
+            margin-right: 8px;
+        }
+        
+        .ai-prompt-description {
+            font-size: 14px;
+            color: var(--on-primary-container);
+            margin-bottom: 16px;
+            opacity: 0.9;
+        }
+        
+        .ai-hint {
+            font-size: 12px;
+            color: var(--on-surface-variant);
+            margin-top: 16px;
+            text-align: center;
+        }
+        
+        .loading-container {
+            display: none;
+            text-align: center;
+            padding: 30px 0;
+        }
+        
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--surface-variant);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            margin: 0 auto 16px;
+            animation: spin 1s linear infinite;
+        }
+        
+        .loading-text {
+            font-size: 14px;
+            color: var(--on-surface-variant);
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .time-input-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        
+        .time-input-group .form-control {
+            width: 80px;
+            text-align: center;
+        }
+        
+        .time-input-label {
+            font-size: 14px;
+            flex: 1;
+        }
+        
+        .info-alert {
+            background-color: #E3F2FD;
+            border-left: 4px solid #1565C0;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 16px;
+            font-size: 13px;
+            color: #0D47A1;
+        }
+        
+        .info-alert i {
+            margin-right: 8px;
+            color: #1565C0;
+        }
+    </style>
+</head>
+<body>
+    <!-- 状态栏 -->
+    <div class="status-bar">
+        <div class="status-bar-time">12:00</div>
+        <div class="status-bar-icons">
+            <i class="fas fa-wifi"></i>
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-battery-full"></i>
+        </div>
+    </div>
+    
+    <!-- 应用栏 -->
+    <div class="app-bar">
+        <a href="plan_detail.html" class="app-bar-back">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <div class="app-bar-title">创建学习任务</div>
+    </div>
+    
+    <!-- 创建内容 -->
+    <div class="create-container">
+        <!-- 计划与阶段信息 -->
+        <div class="plan-phase-info">
+            <div class="plan-title">Web前端开发学习</div>
+            <div style="font-size: 12px; margin-bottom: 8px;">2024.05.01 - 2024.08.31</div>
+            
+            <div class="phase-title">
+                <div class="phase-order">2</div>
+                <span>CSS样式</span>
+            </div>
+            <div style="font-size: 12px; margin-top: 4px;">2024.05.16 - 2024.06.05</div>
+        </div>
+        
+        <!-- 创建方式切换 -->
+        <div class="create-type-switcher">
+            <div class="type-option active" onclick="switchCreateType('manual')">手动创建</div>
+            <div class="type-option" onclick="switchCreateType('ai')">AI生成</div>
+        </div>
+        
+        <!-- 手动创建表单 -->
+        <div id="manual-form" class="form-panel active">
+            <div class="form-group">
+                <label class="form-label">任务名称</label>
+                <input type="text" class="form-control" placeholder="请输入任务名称" />
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">任务描述</label>
+                <textarea class="form-control" rows="3" placeholder="请输入任务描述"></textarea>
+                <div class="form-hint">简要描述任务内容和目标</div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">预计学时</label>
+                <div class="time-input-group">
+                    <input type="number" class="form-control" min="0" step="0.5" value="2" />
+                    <div>小时</div>
+                </div>
+            </div>
+            
+            <div class="date-group">
+                <div class="form-group">
+                    <label class="form-label">开始日期</label>
+                    <input type="date" class="form-control" value="2024-06-02" />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">结束日期</label>
+                    <input type="date" class="form-control" value="2024-06-05" />
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">任务优先级</label>
+                <select class="form-control">
+                    <option value="high">高</option>
+                    <option value="medium" selected>中</option>
+                    <option value="low">低</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">排序</label>
+                <input type="number" class="form-control" min="1" value="4" />
+                <div class="form-hint">此阶段任务的排序位置</div>
+            </div>
+            
+            <div class="info-alert">
+                <i class="fas fa-info-circle"></i>
+                创建任务后，可在任务详情页面点击AI推荐资源为您生成3条学习资源
+            </div>
+            
+            <button class="btn-create" onclick="addTask()" style="margin-top: 16px;">添加到任务列表</button>
+            
+            <!-- 已添加但未提交的任务列表 -->
+            <div id="added-tasks-container" style="margin-top: 24px; display: none;">
+                <h5 style="font-size: 16px; margin-bottom: 16px;">已添加的任务</h5>
+                
+                <div id="added-tasks-list">
+                    <!-- 任务项将动态添加到这里 -->
+                </div>
+                
+                <button class="btn-create" onclick="submitAllTasks()" style="margin-top: 16px; background-color: #4CAF50;">
+                    完成创建
+                </button>
+            </div>
+        </div>
+        
+        <!-- AI生成表单 -->
+        <div id="ai-form" class="form-panel">
+            <div class="ai-prompt-container">
+                <div class="ai-prompt-title">
+                    <i class="fas fa-robot"></i> AI任务生成助手
+                </div>
+                <div class="ai-prompt-description">
+                    AI将为当前学习阶段生成合适的学习任务，并在任务详情中推荐相关学习资源
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">难度倾向</label>
+                <select class="form-control">
+                    <option value="easy">简单（适合初学者）</option>
+                    <option value="medium" selected>中等（有一定基础）</option>
+                    <option value="hard">困难（挑战自我）</option>
+                </select>
+            </div>
+            
+            <div class="date-group">
+                <div class="form-group">
+                    <label class="form-label">开始日期</label>
+                    <input type="date" class="form-control" value="2024-06-02" />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">结束日期</label>
+                    <input type="date" class="form-control" value="2024-06-05" />
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">任务数量</label>
+                <select class="form-control">
+                    <option value="1">1个任务</option>
+                    <option value="2">2个任务</option>
+                    <option value="3" selected>3个任务</option>
+                    <option value="4">4个任务</option>
+                    <option value="5">5个任务</option>
+                </select>
+            </div>
+            
+            <div class="info-alert">
+                <i class="fas fa-info-circle"></i>
+                创建任务后，可在任务详情页面点击AI推荐资源为您生成3条学习资源
+            </div>
+            
+            <button class="btn-create" onclick="generateAITasks()">开始生成</button>
+            
+            <div class="ai-hint">
+                AI将针对当前学习阶段生成最适合的学习任务
+            </div>
+            
+            <!-- 加载提示 -->
+            <div id="loading-container" class="loading-container">
+                <div class="loading-spinner"></div>
+                <div class="loading-text">正在生成学习任务，请稍候...</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/main.js"></script>
+    <script>
+        function switchCreateType(type) {
+            // 更新标签页激活状态
+            document.querySelectorAll('.type-option').forEach(option => {
+                option.classList.remove('active');
+            });
+            document.querySelector(`.type-option[onclick="switchCreateType('${type}')"]`).classList.add('active');
+            
+            // 更新表单显示状态
+            document.querySelectorAll('.form-panel').forEach(panel => {
+                panel.classList.remove('active');
+            });
+            document.getElementById(`${type}-form`).classList.add('active');
+        }
+        
+        // 存储添加的任务
+        let addedTasks = [];
+        
+        // 添加任务到列表
+        function addTask() {
+            const taskName = document.querySelector('#manual-form input[placeholder="请输入任务名称"]').value.trim();
+            const taskDesc = document.querySelector('#manual-form textarea').value.trim();
+            const startDate = document.querySelector('#manual-form input[type="date"]:first-of-type').value;
+            const endDate = document.querySelector('#manual-form input[type="date"]:last-of-type').value;
+            const studyHours = document.querySelector('#manual-form .time-input-group input').value;
+            const priority = document.querySelector('#manual-form select').value;
+            
+            if (!taskName) {
+                alert('请输入任务名称');
+                return;
+            }
+            
+            if (!startDate || !endDate) {
+                alert('请选择开始和结束日期');
+                return;
+            }
+            
+            // 添加任务到数组
+            const newTask = {
+                id: Date.now(),
+                name: taskName,
+                description: taskDesc,
+                startDate: startDate,
+                endDate: endDate,
+                studyHours: studyHours,
+                priority: priority
+            };
+            
+            addedTasks.push(newTask);
+            updateTaskList();
+            clearForm();
+            
+            // 显示任务列表区域
+            document.getElementById('added-tasks-container').style.display = 'block';
+        }
+        
+        // 更新任务列表显示
+        function updateTaskList() {
+            const tasksList = document.getElementById('added-tasks-list');
+            tasksList.innerHTML = '';
+            
+            addedTasks.forEach(task => {
+                const priorityLabel = task.priority === 'high' ? '高' : (task.priority === 'medium' ? '中' : '低');
+                const priorityClass = task.priority === 'high' ? '#EF5350' : (task.priority === 'medium' ? '#FFA726' : '#66BB6A');
+                
+                const taskItem = document.createElement('div');
+                taskItem.className = 'task-item';
+                taskItem.style.padding = '12px';
+                taskItem.style.backgroundColor = 'var(--surface)';
+                taskItem.style.borderRadius = '8px';
+                taskItem.style.marginBottom = '12px';
+                taskItem.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)';
+                taskItem.style.position = 'relative';
+                
+                taskItem.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <div style="font-weight: 500;">${task.name}</div>
+                        <div style="background-color: ${priorityClass}; color: white; padding: 2px 8px; border-radius: 12px; font-size: 12px;">
+                            ${priorityLabel}
+                        </div>
+                    </div>
+                    <div style="font-size: 12px; color: var(--on-surface-variant); margin-bottom: 8px;">
+                        ${task.startDate} - ${task.endDate}
+                    </div>
+                    <div style="font-size: 12px; color: var(--on-surface-variant); margin-bottom: 8px;">
+                        预计学时: ${task.studyHours}小时
+                    </div>
+                    <div style="font-size: 12px; color: var(--on-surface-variant);">
+                        ${task.description || '无描述'}
+                    </div>
+                    <button onclick="removeTask(${task.id})" style="position: absolute; top: 8px; right: 8px; background: none; border: none; color: var(--on-surface-variant); cursor: pointer;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                
+                tasksList.appendChild(taskItem);
+            });
+        }
+        
+        // 清空表单
+        function clearForm() {
+            document.querySelector('#manual-form input[placeholder="请输入任务名称"]').value = '';
+            document.querySelector('#manual-form textarea').value = '';
+            document.querySelector('#manual-form .time-input-group input').value = '2';
+            document.querySelector('#manual-form select').value = 'medium';
+        }
+        
+        // 从列表中移除任务
+        function removeTask(taskId) {
+            addedTasks = addedTasks.filter(task => task.id !== taskId);
+            updateTaskList();
+            
+            // 如果没有任务了，隐藏任务列表区域
+            if (addedTasks.length === 0) {
+                document.getElementById('added-tasks-container').style.display = 'none';
+            }
+        }
+        
+        // 提交所有任务
+        function submitAllTasks() {
+            if (addedTasks.length === 0) {
+                alert('请先添加任务');
+                return;
+            }
+            
+            alert(`成功创建了 ${addedTasks.length} 个任务`);
+            window.location.href = 'plan_detail.html';
+        }
+        
+        function createTask() {
+            // 实际应用中应该进行表单验证和提交
+            alert('任务创建成功');
+            window.location.href = 'plan_detail.html';
+        }
+        
+        function generateAITasks() {
+            // 显示加载状态
+            document.getElementById('loading-container').style.display = 'block';
+            
+            // 模拟异步请求
+            setTimeout(() => {
+                document.getElementById('loading-container').style.display = 'none';
+                alert('AI任务生成成功');
+                window.location.href = 'plan_detail.html';
+            }, 3000);
+        }
+    </script>
+</body>
+</html> 

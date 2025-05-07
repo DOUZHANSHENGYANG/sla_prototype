@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>引导页 - 智能学习助手</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <style>
+        body {
+            height: 100vh;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background);
+        }
+        
+        .intro-container {
+            height: 100%;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .intro-slider {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .intro-slide {
+            min-width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        
+        .intro-image {
+            height: 200px;
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .intro-image i {
+            font-size: 140px;
+            color: var(--primary);
+        }
+        
+        .intro-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--on-surface);
+            margin-bottom: 16px;
+        }
+        
+        .intro-text {
+            font-size: 16px;
+            color: var(--on-surface-variant);
+            margin-bottom: 40px;
+            max-width: 80%;
+        }
+        
+        .intro-dots {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        
+        .intro-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--surface-variant);
+            margin: 0 5px;
+        }
+        
+        .intro-dot.active {
+            background-color: var(--primary);
+            width: 20px;
+            border-radius: 4px;
+        }
+        
+        .intro-buttons {
+            display: flex;
+            justify-content: center;
+            padding: 0 20px;
+            margin-bottom: 40px;
+        }
+        
+        .btn-skip {
+            background: transparent;
+            color: var(--primary);
+            border: none;
+            margin-right: 20px;
+        }
+        
+        .btn-next {
+            background-color: var(--primary);
+            color: var(--on-primary);
+            border: none;
+            border-radius: 24px;
+            padding: 10px 24px;
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+    <!-- 状态栏 -->
+    <div class="status-bar">
+        <div class="status-bar-time">12:00</div>
+        <div class="status-bar-icons">
+            <i class="fas fa-wifi"></i>
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-battery-full"></i>
+        </div>
+    </div>
+    
+    <!-- 引导页内容 -->
+    <div class="intro-container">
+        <div class="intro-slider">
+            <!-- 第一页 -->
+            <div class="intro-slide" id="slide1">
+                <div class="intro-image">
+                    <i class="fas fa-book-reader"></i>
+                </div>
+                <h2 class="intro-title">学习计划管理</h2>
+                <p class="intro-text">制定个性化学习计划，科学规划学习路径，高效完成学习目标</p>
+            </div>
+            
+            <!-- 第二页 -->
+            <div class="intro-slide" id="slide2" style="display: none;">
+                <div class="intro-image">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <h2 class="intro-title">专注时间管理</h2>
+                <p class="intro-text">高效的番茄钟计时，记录学习时间，帮助你高效专注学习</p>
+            </div>
+            
+            <!-- 第三页 -->
+            <div class="intro-slide" id="slide3" style="display: none;">
+                <div class="intro-image">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h2 class="intro-title">线上自习室</h2>
+                <p class="intro-text">和志同道合的学习伙伴一起在线自习，相互监督，共同进步</p>
+            </div>
+            
+            <!-- 第四页 -->
+            <div class="intro-slide" id="slide4" style="display: none;">
+                <div class="intro-image">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <h2 class="intro-title">AI学习助手</h2>
+                <p class="intro-text">利用人工智能技术，提供个性化学习建议和答疑解惑</p>
+            </div>
+        </div>
+        
+        <div class="intro-dots">
+            <div class="intro-dot active" data-slide="1"></div>
+            <div class="intro-dot" data-slide="2"></div>
+            <div class="intro-dot" data-slide="3"></div>
+            <div class="intro-dot" data-slide="4"></div>
+        </div>
+        
+        <div class="intro-buttons">
+            <button class="btn-skip" onclick="window.location.href='login.html'">跳过</button>
+            <button class="btn-next" onclick="nextSlide()">下一步</button>
+        </div>
+    </div>
+
+    <script src="../assets/js/main.js"></script>
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 4;
+        
+        function showSlide(slideNumber) {
+            // 隐藏所有幻灯片
+            for (let i = 1; i <= totalSlides; i++) {
+                document.getElementById(`slide${i}`).style.display = 'none';
+                document.querySelector(`.intro-dot[data-slide="${i}"]`).classList.remove('active');
+            }
+            
+            // 显示当前幻灯片
+            document.getElementById(`slide${slideNumber}`).style.display = 'flex';
+            document.querySelector(`.intro-dot[data-slide="${slideNumber}"]`).classList.add('active');
+            
+            // 更新当前幻灯片索引
+            currentSlide = slideNumber;
+            
+            // 更新按钮文本
+            const nextBtn = document.querySelector('.btn-next');
+            if (currentSlide === totalSlides) {
+                nextBtn.textContent = '开始使用';
+                nextBtn.onclick = function() {
+                    window.location.href = 'login.html';
+                };
+            } else {
+                nextBtn.textContent = '下一步';
+                nextBtn.onclick = nextSlide;
+            }
+        }
+        
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                showSlide(currentSlide + 1);
+            } else {
+                window.location.href = 'login.html';
+            }
+        }
+        
+        // 为指示点添加点击事件
+        document.querySelectorAll('.intro-dot').forEach(dot => {
+            dot.addEventListener('click', function() {
+                const slideNumber = parseInt(this.dataset.slide);
+                showSlide(slideNumber);
+            });
+        });
+        
+        // 初始化显示第一张幻灯片
+        showSlide(1);
+    </script>
+</body>
+</html> 

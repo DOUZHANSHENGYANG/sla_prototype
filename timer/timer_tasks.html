@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>任务列表 - 智能学习助手</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <style>
+        body {
+            background-color: var(--background);
+            color: var(--on-background);
+            font-family: var(--font-family);
+        }
+        
+        .task-card {
+            background-color: var(--surface);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            position: relative;
+        }
+        
+        .task-type-badge {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            padding: 5px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .badge-pomodoro {
+            background-color: var(--primary-container);
+            color: var(--on-primary-container);
+        }
+        
+        .badge-countdown {
+            background-color: var(--tertiary-container);
+            color: var(--on-tertiary-container);
+        }
+        
+        .task-title {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            padding-right: 80px;
+        }
+        
+        .task-detail {
+            color: var(--on-surface-variant);
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+        
+        .task-actions {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .btn-timer-action {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        .btn-timer-action i {
+            margin-right: 6px;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 24px 0 16px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 500;
+            color: var(--on-surface);
+        }
+        
+        .section-action {
+            font-size: 14px;
+            color: var(--primary);
+            cursor: pointer;
+        }
+        
+        .fab-add {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: var(--on-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            z-index: 100;
+            font-size: 24px;
+        }
+        
+        .completed-section {
+            margin-top: 30px;
+        }
+        
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 0;
+            color: var(--on-surface-variant);
+        }
+        
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+        
+        .empty-state-text {
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 状态栏 -->
+    <div class="status-bar">
+        <div class="status-bar-time">12:00</div>
+        <div class="status-bar-icons">
+            <i class="fas fa-wifi"></i>
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-battery-full"></i>
+        </div>
+    </div>
+    
+    <!-- 应用栏 -->
+    <div class="app-bar">
+        <a href="index.html" class="app-bar-back">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <div class="app-bar-title">计时任务</div>
+    </div>
+    
+    <!-- 主内容 -->
+    <div class="page-container">
+        <!-- 待完成任务 -->
+        <div class="section-header">
+            <div class="section-title">待完成任务</div>
+        </div>
+        
+        <div class="task-list">
+            <!-- 番茄钟任务 -->
+            <div class="task-card">
+                <div class="task-type-badge badge-pomodoro">番茄钟</div>
+                <h3 class="task-title">英语听力训练</h3>
+                <div class="task-detail">4个番茄 × 25分钟，休息5分钟</div>
+                <div class="task-actions">
+                    <button class="btn material-btn" onclick="location.href='timer_running.html'">
+                        <i class="fas fa-play"></i> 开始计时
+                    </button>
+                    <div>
+                        <button class="btn btn-link text-secondary" onclick="location.href='timer_create.html?edit=1'">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-link text-danger">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 倒计时任务 -->
+            <div class="task-card">
+                <div class="task-type-badge badge-countdown">倒计时</div>
+                <h3 class="task-title">阅读《深入理解计算机系统》</h3>
+                <div class="task-detail">60分钟</div>
+                <div class="task-actions">
+                    <button class="btn material-btn" onclick="location.href='timer_running.html'">
+                        <i class="fas fa-play"></i> 开始计时
+                    </button>
+                    <div>
+                        <button class="btn btn-link text-secondary" onclick="location.href='timer_create.html?edit=1'">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-link text-danger">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 自由计时任务 -->
+            <div class="task-card">
+                <div class="task-type-badge badge-countdown" style="background-color: var(--secondary-container); color: var(--on-secondary-container);">自由计时</div>
+                <h3 class="task-title">算法练习</h3>
+                <div class="task-detail">不限时长</div>
+                <div class="task-actions">
+                    <button class="btn material-btn" onclick="location.href='timer_running.html'">
+                        <i class="fas fa-play"></i> 开始计时
+                    </button>
+                    <div>
+                        <button class="btn btn-link text-secondary" onclick="location.href='timer_create.html?edit=1'">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-link text-danger">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 已完成任务 -->
+        <div class="completed-section">
+            <div class="section-header">
+                <div class="section-title">已完成任务</div>
+                <div class="section-action" data-bs-toggle="collapse" data-bs-target="#completedTasks">
+                    <i class="fas fa-chevron-down"></i> 展开
+                </div>
+            </div>
+            
+            <div id="completedTasks" class="collapse">
+                <!-- 已完成任务列表 -->
+                <div class="task-card">
+                    <div class="task-type-badge badge-pomodoro">番茄钟</div>
+                    <h3 class="task-title">数学习题</h3>
+                    <div class="task-detail">3个番茄 × 25分钟，完成于昨天</div>
+                    <div class="task-actions">
+                        <button class="btn material-btn-outline" onclick="location.href='timer_create.html?duplicate=1'">
+                            <i class="fas fa-copy"></i> 复制任务
+                        </button>
+                        <button class="btn btn-link text-danger">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="task-card">
+                    <div class="task-type-badge badge-countdown">倒计时</div>
+                    <h3 class="task-title">物理实验报告</h3>
+                    <div class="task-detail">90分钟，完成于前天</div>
+                    <div class="task-actions">
+                        <button class="btn material-btn-outline" onclick="location.href='timer_create.html?duplicate=1'">
+                            <i class="fas fa-copy"></i> 复制任务
+                        </button>
+                        <button class="btn btn-link text-danger">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 新增任务按钮 -->
+    <a href="timer_create.html" class="fab-add">
+        <i class="fas fa-plus"></i>
+    </a>
+    
+    <!-- 底部导航栏 -->
+    <div class="bottom-nav">
+        <a href="../plan/plan_list.html" class="bottom-nav-item">
+            <i class="fas fa-tasks bottom-nav-icon"></i>
+            <span>计划</span>
+        </a>
+        <a href="index.html" class="bottom-nav-item active">
+            <i class="fas fa-clock bottom-nav-icon"></i>
+            <span>时间</span>
+        </a>
+        <a href="#" class="bottom-nav-item">
+            <i class="fas fa-robot bottom-nav-icon"></i>
+            <span>AI工具</span>
+        </a>
+        <a href="../user/profile.html" class="bottom-nav-item">
+            <i class="fas fa-user bottom-nav-icon"></i>
+            <span>我的</span>
+        </a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 

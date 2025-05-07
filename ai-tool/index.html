@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI工具箱 - 智能学习助手</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <style>
+        body {
+            background-color: var(--background);
+            color: var(--on-background);
+            font-family: var(--font-family);
+        }
+        
+        .ai-tool-card {
+            background-color: var(--surface);
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .ai-tool-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+        }
+        
+        .ai-tool-header {
+            position: relative;
+            height: 120px;
+            overflow: hidden;
+        }
+        
+        .ai-tool-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .ai-tool-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.6));
+            display: flex;
+            align-items: flex-end;
+            padding: 16px;
+        }
+        
+        .ai-tool-title {
+            color: white;
+            font-weight: 500;
+            font-size: 18px;
+            margin: 0;
+        }
+        
+        .ai-tool-content {
+            padding: 16px;
+        }
+        
+        .ai-tool-description {
+            color: var(--on-surface-variant);
+            font-size: 14px;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+        
+        .ai-tools-header {
+            background-color: var(--primary);
+            padding: 24px 16px;
+            margin-top: -16px;
+            margin-left: -16px;
+            margin-right: -16px;
+            color: var(--on-primary);
+            margin-bottom: 24px;
+            border-radius: 0 0 16px 16px;
+            position: relative;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .ai-tools-title {
+            font-size: 22px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        
+        .ai-tools-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .animated-gradient {
+            background: linear-gradient(270deg, var(--primary), var(--tertiary-container));
+            background-size: 400% 400%;
+            animation: gradient 8s ease infinite;
+        }
+        
+        @keyframes gradient {
+            0% {background-position: 0% 50%;}
+            50% {background-position: 100% 50%;}
+            100% {background-position: 0% 50%;}
+        }
+    </style>
+</head>
+<body>
+    <!-- 状态栏 -->
+    <div class="status-bar">
+        <div class="status-bar-time">12:00</div>
+        <div class="status-bar-icons">
+            <i class="fas fa-wifi"></i>
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-battery-full"></i>
+        </div>
+    </div>
+    
+    <!-- 应用栏 -->
+    <div class="app-bar">
+        <a href="../index.html" class="app-bar-back">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <div class="app-bar-title">AI工具箱</div>
+    </div>
+    
+    <!-- 主内容 -->
+    <div class="page-container">
+        <div class="ai-tools-header animated-gradient">
+            <div class="ai-tools-title">AI学习工具箱</div>
+            <div class="ai-tools-subtitle">强大的AI助手，让学习更高效</div>
+        </div>
+        
+        <!-- 错题本工具 -->
+        <a href="mistake_book.html" class="text-decoration-none">
+            <div class="ai-tool-card">
+                <div class="ai-tool-header">
+                    <img src="https://source.unsplash.com/random/400x200?notebook,study" alt="错题本" class="ai-tool-image">
+                    <div class="ai-tool-overlay">
+                        <h3 class="ai-tool-title">智能错题本</h3>
+                    </div>
+                </div>
+                <div class="ai-tool-content">
+                    <div class="ai-tool-description">
+                        智能分析错题，科学安排复习，快速掌握知识点，提升做题正确率
+                    </div>
+                    <button class="btn material-btn">开始使用</button>
+                </div>
+            </div>
+        </a>
+        
+        <!-- 翻译工具 -->
+        <a href="translate.html" class="text-decoration-none">
+            <div class="ai-tool-card">
+                <div class="ai-tool-header">
+                    <img src="https://source.unsplash.com/random/400x200?translate,language" alt="翻译工具" class="ai-tool-image">
+                    <div class="ai-tool-overlay">
+                        <h3 class="ai-tool-title">智能翻译</h3>
+                    </div>
+                </div>
+                <div class="ai-tool-content">
+                    <div class="ai-tool-description">
+                        支持多语言翻译，图片文字识别，语音输入输出，轻松应对外语学习
+                    </div>
+                    <button class="btn material-btn">开始使用</button>
+                </div>
+            </div>
+        </a>
+        
+        <!-- 文档总结工具 -->
+        <a href="document_summary.html" class="text-decoration-none">
+            <div class="ai-tool-card">
+                <div class="ai-tool-header">
+                    <img src="https://source.unsplash.com/random/400x200?document,summary" alt="文档总结" class="ai-tool-image">
+                    <div class="ai-tool-overlay">
+                        <h3 class="ai-tool-title">文档总结</h3>
+                    </div>
+                </div>
+                <div class="ai-tool-content">
+                    <div class="ai-tool-description">
+                        自动提取文档关键信息，生成精准摘要，快速把握核心内容，节省阅读时间
+                    </div>
+                    <button class="btn material-btn">开始使用</button>
+                </div>
+            </div>
+        </a>
+        
+        <!-- AI对话工具 -->
+        <a href="ai_chat.html" class="text-decoration-none">
+            <div class="ai-tool-card">
+                <div class="ai-tool-header">
+                    <img src="https://source.unsplash.com/random/400x200?ai,chat" alt="AI对话" class="ai-tool-image">
+                    <div class="ai-tool-overlay">
+                        <h3 class="ai-tool-title">智能对话助手</h3>
+                    </div>
+                </div>
+                <div class="ai-tool-content">
+                    <div class="ai-tool-description">
+                        强大的AI对话系统，解答学习疑问，提供专业解释，帮助理解难题，学习更轻松
+                    </div>
+                    <button class="btn material-btn">开始使用</button>
+                </div>
+            </div>
+        </a>
+    </div>
+    
+    <!-- 底部导航栏 -->
+    <div class="bottom-nav">
+        <a href="../plan/plan_list.html" class="bottom-nav-item">
+            <i class="fas fa-tasks bottom-nav-icon"></i>
+            <span>计划</span>
+        </a>
+        <a href="../timer/index.html" class="bottom-nav-item">
+            <i class="fas fa-clock bottom-nav-icon"></i>
+            <span>时间</span>
+        </a>
+        <a href="#" class="bottom-nav-item active">
+            <i class="fas fa-robot bottom-nav-icon"></i>
+            <span>AI工具</span>
+        </a>
+        <a href="../user/profile.html" class="bottom-nav-item">
+            <i class="fas fa-user bottom-nav-icon"></i>
+            <span>我的</span>
+        </a>
+    </div>
+</body>
+</html> 

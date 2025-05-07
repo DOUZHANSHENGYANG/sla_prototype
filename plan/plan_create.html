@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>创建计划 - 智能学习助手</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <style>
+        body {
+            height: 100vh;
+            background-color: var(--background);
+            padding-bottom: 20px;
+        }
+        
+        .app-bar {
+            background-color: var(--primary);
+            color: var(--on-primary);
+            padding: 16px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .app-bar-back {
+            margin-right: 16px;
+            color: var(--on-primary);
+            font-size: 20px;
+        }
+        
+        .app-bar-title {
+            font-size: 18px;
+            font-weight: 500;
+            flex: 1;
+        }
+        
+        .create-container {
+            padding: 20px;
+        }
+        
+        .section-title {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 16px;
+            color: var(--on-surface);
+        }
+        
+        .create-type-switcher {
+            display: flex;
+            background-color: var(--surface-variant);
+            border-radius: 8px;
+            margin-bottom: 24px;
+            padding: 4px;
+        }
+        
+        .type-option {
+            flex: 1;
+            padding: 10px 0;
+            text-align: center;
+            font-size: 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            color: var(--on-surface-variant);
+        }
+        
+        .type-option.active {
+            background-color: var(--surface);
+            color: var(--primary);
+            font-weight: 500;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .form-panel {
+            display: none;
+        }
+        
+        .form-panel.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 16px;
+        }
+        
+        .form-label {
+            font-size: 14px;
+            color: var(--on-surface);
+            margin-bottom: 8px;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--outline);
+            border-radius: 8px;
+            background-color: var(--surface);
+            color: var(--on-surface);
+            font-size: 14px;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(54, 94, 157, 0.1);
+        }
+        
+        .form-control::placeholder {
+            color: var(--on-surface-variant);
+        }
+        
+        .form-hint {
+            font-size: 12px;
+            color: var(--on-surface-variant);
+            margin-top: 4px;
+        }
+        
+        .date-group {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .date-group .form-group {
+            flex: 1;
+        }
+        
+        .btn-add-phase {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 14px;
+            background: none;
+            border: 1px dashed var(--primary);
+            border-radius: 8px;
+            padding: 12px;
+            width: 100%;
+            margin-bottom: 24px;
+        }
+        
+        .btn-add-phase i {
+            margin-right: 8px;
+        }
+        
+        .phase-card {
+            background-color: var(--surface);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border-left: 3px solid var(--primary);
+        }
+        
+        .phase-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            align-items: center;
+        }
+        
+        .phase-title {
+            font-weight: 500;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .phase-order {
+            width: 20px;
+            height: 20px;
+            background-color: var(--primary-container);
+            color: var(--on-primary-container);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            margin-right: 8px;
+        }
+        
+        .phase-action {
+            color: var(--on-surface-variant);
+            font-size: 14px;
+            cursor: pointer;
+        }
+        
+        .phase-date {
+            font-size: 12px;
+            color: var(--on-surface-variant);
+            margin-bottom: 4px;
+        }
+        
+        .phase-description {
+            font-size: 12px;
+            color: var(--on-surface-variant);
+        }
+        
+        .btn-create {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--primary);
+            color: var(--on-primary);
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            margin-top: 24px;
+        }
+        
+        .ai-prompt-container {
+            background-color: var(--primary-container);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .ai-prompt-title {
+            font-weight: 500;
+            color: var(--on-primary-container);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .ai-prompt-title i {
+            margin-right: 8px;
+        }
+        
+        .ai-prompt-description {
+            font-size: 14px;
+            color: var(--on-primary-container);
+            margin-bottom: 16px;
+            opacity: 0.9;
+        }
+        
+        .ai-prompt-examples {
+            font-size: 13px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .ai-hint {
+            font-size: 12px;
+            color: var(--on-surface-variant);
+            margin-top: 16px;
+            text-align: center;
+        }
+        
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        
+        .radio-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid var(--outline);
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        
+        .radio-item.selected {
+            border-color: var(--primary);
+            background-color: rgba(54, 94, 157, 0.05);
+        }
+        
+        .radio-item input[type="radio"] {
+            margin-right: 12px;
+        }
+        
+        .radio-label {
+            font-size: 14px;
+            color: var(--on-surface);
+            font-weight: 500;
+        }
+        
+        .radio-description {
+            font-size: 12px;
+            color: var(--on-surface-variant);
+            margin-top: 2px;
+            margin-left: 24px;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+        }
+        
+        .checkbox-item input[type="checkbox"] {
+            margin-right: 6px;
+        }
+        
+        .time-input-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        
+        .time-input-group .form-control {
+            width: 80px;
+            text-align: center;
+        }
+        
+        .time-input-label {
+            font-size: 14px;
+            flex: 1;
+        }
+        
+        .loading-container {
+            display: none;
+            text-align: center;
+            padding: 30px 0;
+        }
+        
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--surface-variant);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            margin: 0 auto 16px;
+            animation: spin 1s linear infinite;
+        }
+        
+        .loading-text {
+            font-size: 14px;
+            color: var(--on-surface-variant);
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- 状态栏 -->
+    <div class="status-bar">
+        <div class="status-bar-time">12:00</div>
+        <div class="status-bar-icons">
+            <i class="fas fa-wifi"></i>
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-battery-full"></i>
+        </div>
+    </div>
+    
+    <!-- 应用栏 -->
+    <div class="app-bar">
+        <a href="plan_list.html" class="app-bar-back">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <div class="app-bar-title">创建学习计划</div>
+    </div>
+    
+    <!-- 创建内容 -->
+    <div class="create-container">
+        <!-- 创建方式切换 -->
+        <div class="create-type-switcher">
+            <div class="type-option active" onclick="switchCreateType('manual')">手动创建</div>
+            <div class="type-option" onclick="switchCreateType('ai')">AI生成</div>
+        </div>
+        
+        <!-- 手动创建表单 -->
+        <div id="manual-form" class="form-panel active">
+            <div class="form-group">
+                <label class="form-label">计划名称</label>
+                <input type="text" class="form-control" placeholder="请输入计划名称" />
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">学习领域</label>
+                <select class="form-control">
+                    <option value="">请选择学习领域</option>
+                    <option value="programming">编程</option>
+                    <option value="language">语言学习</option>
+                    <option value="math">数学</option>
+                    <option value="physics">物理</option>
+                    <option value="chemistry">化学</option>
+                    <option value="biology">生物</option>
+                    <option value="history">历史</option>
+                    <option value="literature">文学</option>
+                    <option value="art">艺术</option>
+                    <option value="music">音乐</option>
+                    <option value="other">其他</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">计划描述</label>
+                <textarea class="form-control" rows="3" placeholder="请输入计划描述"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">当前水平</label>
+                <select class="form-control">
+                    <option value="">请选择当前水平</option>
+                    <option value="beginner">入门级</option>
+                    <option value="elementary">初级</option>
+                    <option value="intermediate">中级</option>
+                    <option value="advanced">高级</option>
+                    <option value="expert">专家级</option>
+                </select>
+            </div>
+            
+            <div class="date-group">
+                <div class="form-group">
+                    <label class="form-label">开始日期</label>
+                    <input type="date" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">结束日期</label>
+                    <input type="date" class="form-control" />
+                </div>
+            </div>
+            
+            <h3 class="section-title">阶段信息</h3>
+            
+            <!-- 阶段卡片 -->
+            <div class="phase-card">
+                <div class="phase-header">
+                    <div class="phase-title">
+                        <div class="phase-order">1</div>
+                        <span>HTML基础</span>
+                    </div>
+                    <div class="phase-action">
+                        <i class="fas fa-trash-alt"></i>
+                    </div>
+                </div>
+                <div class="phase-date">2024.05.01 - 2024.05.15</div>
+                <div class="phase-description">掌握HTML5基础标签和页面结构</div>
+            </div>
+            
+            <div class="phase-card">
+                <div class="phase-header">
+                    <div class="phase-title">
+                        <div class="phase-order">2</div>
+                        <span>CSS样式</span>
+                    </div>
+                    <div class="phase-action">
+                        <i class="fas fa-trash-alt"></i>
+                    </div>
+                </div>
+                <div class="phase-date">2024.05.16 - 2024.06.05</div>
+                <div class="phase-description">掌握CSS选择器、布局和响应式设计</div>
+            </div>
+            
+            <!-- 添加阶段按钮 -->
+            <button class="btn-add-phase" onclick="showAddPhaseModal()">
+                <i class="fas fa-plus"></i> 添加学习阶段
+            </button>
+            
+            <button class="btn-create" onclick="createPlan()">创建计划</button>
+        </div>
+        
+        <!-- AI生成表单 -->
+        <div id="ai-form" class="form-panel">
+            <div class="ai-prompt-container">
+                <div class="ai-prompt-title">
+                    <i class="fas fa-robot"></i> AI学习计划生成助手
+                </div>
+                <div class="ai-prompt-description">
+                    描述你的学习需求，AI将为你量身定制一个合适的学习计划
+                </div>
+                <div class="ai-prompt-examples">
+                    <strong>示例：</strong><br/>
+                    "我想学习前端开发，目前是零基础，希望能在3个月内掌握HTML、CSS和JavaScript的基础知识，最终能够独立开发简单的网页。我每周工作日每天能花2小时学习，周末每天能花4小时。"
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">学习需求描述</label>
+                <textarea class="form-control" rows="5" placeholder="请描述你的学习目标、当前水平、时间安排等信息"></textarea>
+                <div class="form-hint">描述越详细，生成的计划越符合你的需求</div>
+            </div>
+            
+            <div class="date-group">
+                <div class="form-group">
+                    <label class="form-label">计划开始日期</label>
+                    <input type="date" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">计划结束日期</label>
+                    <input type="date" class="form-control" />
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">目前水平</label>
+                <select class="form-control">
+                    <option value="">请选择当前水平</option>
+                    <option value="beginner">入门级（完全没有基础）</option>
+                    <option value="elementary">初级（有些基础知识）</option>
+                    <option value="intermediate">中级（掌握基本概念）</option>
+                    <option value="advanced">高级（熟练应用）</option>
+                    <option value="expert">专家级（精通）</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">每周可用时间</label>
+                <div class="time-input-group">
+                    <div class="time-input-label">工作日（周一至周五）</div>
+                    <input type="number" class="form-control" min="0" max="24" value="2" />
+                    <div>小时/天</div>
+                </div>
+                <div class="time-input-group">
+                    <div class="time-input-label">周末（周六周日）</div>
+                    <input type="number" class="form-control" min="0" max="24" value="4" />
+                    <div>小时/天</div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">生成内容</label>
+                <div class="radio-group">
+                    <div class="radio-item selected" onclick="selectGenerateOption('phase-only')">
+                        <input type="radio" id="gen-phase-only" name="generate-option" value="phase-only" checked />
+                        <div>
+                            <div class="radio-label">仅生成计划阶段</div>
+                            <div class="radio-description">只生成学习阶段，任务需要手动添加</div>
+                        </div>
+                    </div>
+                    <div class="radio-item" onclick="selectGenerateOption('all')">
+                        <input type="radio" id="gen-all" name="generate-option" value="all" />
+                        <div>
+                            <div class="radio-label">一键生成全部</div>
+                            <div class="radio-description">生成完整的学习计划，包含阶段和任务</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="btn-create" onclick="generateAIPlan()">开始生成</button>
+            
+            <div class="ai-hint">
+                AI生成过程需要一些时间，请耐心等待
+            </div>
+            
+            <!-- 加载提示 -->
+            <div id="loading-container" class="loading-container">
+                <div class="loading-spinner"></div>
+                <div class="loading-text">正在生成学习计划，请稍候...</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/main.js"></script>
+    <script>
+        function switchCreateType(type) {
+            // 更新标签页激活状态
+            document.querySelectorAll('.type-option').forEach(option => {
+                option.classList.remove('active');
+            });
+            document.querySelector(`.type-option[onclick="switchCreateType('${type}')"]`).classList.add('active');
+            
+            // 更新表单显示状态
+            document.querySelectorAll('.form-panel').forEach(panel => {
+                panel.classList.remove('active');
+            });
+            document.getElementById(`${type}-form`).classList.add('active');
+        }
+        
+        function selectGenerateOption(option) {
+            // 更新选中状态
+            document.querySelectorAll('.radio-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            document.querySelector(`.radio-item input[value="${option}"]`).parentNode.classList.add('selected');
+            document.querySelector(`#gen-${option}`).checked = true;
+        }
+        
+        function showAddPhaseModal() {
+            // 实际应用中应该显示一个添加阶段的模态框
+            window.location.href = 'phase_create.html';
+        }
+        
+        function createPlan() {
+            // 实际应用中应该进行表单验证和提交
+            alert('计划创建成功');
+            window.location.href = 'plan_list.html';
+        }
+        
+        function generateAIPlan() {
+            // 显示加载状态
+            document.getElementById('loading-container').style.display = 'block';
+            
+            // 模拟异步请求
+            setTimeout(() => {
+                document.getElementById('loading-container').style.display = 'none';
+                alert('AI计划生成成功');
+                window.location.href = 'plan_list.html';
+            }, 3000);
+        }
+    </script>
+</body>
+</html> 

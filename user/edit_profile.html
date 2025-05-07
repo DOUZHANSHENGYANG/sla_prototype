@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>编辑资料 - 智能学习助手</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <style>
+        body {
+            height: 100vh;
+            background-color: var(--background);
+        }
+        
+        .app-bar {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            background-color: var(--primary);
+            color: var(--on-primary);
+        }
+        
+        .app-bar-back {
+            color: var(--on-primary);
+            font-size: 24px;
+            margin-right: 16px;
+        }
+        
+        .app-bar-title {
+            font-size: 18px;
+            font-weight: 500;
+            flex: 1;
+        }
+        
+        .app-bar-action {
+            color: var(--on-primary);
+            font-weight: 500;
+            background: none;
+            border: none;
+            font-size: 14px;
+        }
+        
+        .edit-container {
+            padding: 20px;
+        }
+        
+        .avatar-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .avatar-wrapper {
+            position: relative;
+            margin-bottom: 10px;
+        }
+        
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary-container);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: white;
+            color: var(--primary);
+            font-size: 40px;
+            font-weight: 500;
+        }
+        
+        .avatar-edit {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: var(--on-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .avatar-hint {
+            font-size: 14px;
+            color: var(--on-surface-variant);
+        }
+        
+        .form-section {
+            background-color: var(--surface);
+            border-radius: 8px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .form-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid var(--surface-variant);
+        }
+        
+        .form-item:last-child {
+            border-bottom: none;
+        }
+        
+        .form-label {
+            width: 80px;
+            font-size: 16px;
+            color: var(--on-surface);
+        }
+        
+        .form-input {
+            flex: 1;
+            border: none;
+            background: none;
+            font-size: 16px;
+            color: var(--on-surface);
+            outline: none;
+        }
+        
+        .form-input::placeholder {
+            color: var(--on-surface-variant);
+        }
+        
+        .form-arrow {
+            color: var(--on-surface-variant);
+            margin-left: 10px;
+        }
+        
+        .section-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--on-surface-variant);
+            margin: 15px 0 10px;
+        }
+        
+        .btn-save {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--primary);
+            color: var(--on-primary);
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            margin-top: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .gender-radio {
+            display: flex;
+            flex: 1;
+        }
+        
+        .gender-option {
+            margin-right: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .gender-option input {
+            margin-right: 5px;
+        }
+        
+        /* 日期选择器样式 */
+        input[type="date"] {
+            border: none;
+            background: transparent;
+            color: var(--on-surface);
+        }
+        
+        /* 移除日期选择器默认图标 */
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <!-- 状态栏 -->
+    <div class="status-bar">
+        <div class="status-bar-time">12:00</div>
+        <div class="status-bar-icons">
+            <i class="fas fa-wifi"></i>
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-battery-full"></i>
+        </div>
+    </div>
+    
+    <!-- 应用栏 -->
+    <div class="app-bar">
+        <a href="profile.html" class="app-bar-back">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <div class="app-bar-title">编辑个人资料</div>
+        <button class="app-bar-action" onclick="window.location.href='profile.html'">保存</button>
+    </div>
+    
+    <!-- 编辑资料内容 -->
+    <div class="edit-container">
+        <!-- 头像部分 -->
+        <div class="avatar-section">
+            <div class="avatar-wrapper">
+                <div class="avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <a href="#" class="avatar-edit">
+                    <i class="fas fa-camera"></i>
+                </a>
+            </div>
+            <div class="avatar-hint">点击更换头像</div>
+        </div>
+        
+        <!-- 基本信息表单 -->
+        <h3 class="section-title">基本信息</h3>
+        <div class="form-section">
+            <div class="form-item">
+                <div class="form-label">用户名</div>
+                <input type="text" class="form-input" value="李明" placeholder="请输入用户名">
+            </div>
+            
+            <div class="form-item">
+                <div class="form-label">性别</div>
+                <div class="gender-radio">
+                    <label class="gender-option">
+                        <input type="radio" name="gender" value="male" checked> 男
+                    </label>
+                    <label class="gender-option">
+                        <input type="radio" name="gender" value="female"> 女
+                    </label>
+                </div>
+            </div>
+            
+            <div class="form-item">
+                <div class="form-label">生日</div>
+                <input type="date" class="form-input" value="2000-01-01">
+            </div>
+            
+            <div class="form-item">
+                <div class="form-label">手机</div>
+                <input type="text" class="form-input" value="13812349876" placeholder="请输入手机号" readonly>
+                <div class="form-arrow">
+                    <i class="fas fa-lock"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 身份信息表单 -->
+        <h3 class="section-title">身份信息</h3>
+        <div class="form-section">
+            <div class="form-item">
+                <div class="form-label">身份</div>
+                <select class="form-input">
+                    <option value="student">大学生</option>
+                    <option value="worker">上班族</option>
+                    <option value="teacher">老师</option>
+                    <option value="other">其他</option>
+                </select>
+                <div class="form-arrow">
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+            </div>
+            
+            <div class="form-item">
+                <div class="form-label">学校</div>
+                <input type="text" class="form-input" value="北京大学" placeholder="请输入学校名称">
+            </div>
+            
+            <div class="form-item">
+                <div class="form-label">专业</div>
+                <input type="text" class="form-input" value="计算机科学" placeholder="请输入专业名称">
+            </div>
+        </div>
+        
+        <!-- 其他信息表单 -->
+        <h3 class="section-title">其他信息</h3>
+        <div class="form-section">
+            <div class="form-item">
+                <div class="form-label">个性签名</div>
+                <input type="text" class="form-input" value="每天进步一点点" placeholder="请输入个性签名">
+            </div>
+        </div>
+        
+        <button class="btn-save" onclick="window.location.href='profile.html'">保存修改</button>
+    </div>
+
+    <script src="../assets/js/main.js"></script>
+</body>
+</html> 

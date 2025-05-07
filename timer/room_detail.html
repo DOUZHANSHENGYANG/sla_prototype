@@ -1,0 +1,1417 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自习室详情 - 智能学习助手</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <style>
+        body {
+            background-color: var(--background);
+            color: var(--on-background);
+            font-family: var(--font-family);
+        }
+        
+        .room-header {
+            position: relative;
+            height: 200px;
+            overflow: hidden;
+            border-radius: 0 0 16px 16px;
+            margin: -16px -16px 0;
+        }
+        
+        .room-header-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .room-header-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.7));
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 16px;
+            color: white;
+        }
+        
+        .room-name {
+            font-size: 24px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        
+        .room-owner {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 8px;
+        }
+        
+        .room-tags {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        
+        .room-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            background-color: rgba(255,255,255,0.2);
+            color: white;
+            font-size: 12px;
+            margin-right: 8px;
+            margin-bottom: 4px;
+        }
+        
+        .room-stats {
+            display: flex;
+            background-color: var(--surface);
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-top: 16px;
+            overflow: hidden;
+        }
+        
+        .stat-item {
+            flex: 1;
+            padding: 16px;
+            text-align: center;
+            border-right: 1px solid var(--surface-variant);
+        }
+        
+        .stat-item:last-child {
+            border-right: none;
+        }
+        
+        .stat-value {
+            font-size: 20px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: var(--on-surface-variant);
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 500;
+            margin: 24px 0 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .section-action {
+            font-size: 14px;
+            color: var(--primary);
+            cursor: pointer;
+        }
+        
+        .room-description {
+            background-color: var(--surface);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            color: var(--on-surface);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .members-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+        
+        .member-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .member-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--surface-variant);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--on-surface-variant);
+            font-size: 24px;
+            margin-bottom: 8px;
+            position: relative;
+        }
+        
+        .member-online {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 12px;
+            height: 12px;
+            background-color: #4CAF50;
+            border-radius: 50%;
+            border: 2px solid var(--surface);
+        }
+        
+        .member-name {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--on-surface);
+        }
+        
+        .member-role {
+            font-size: 10px;
+            color: var(--on-surface-variant);
+        }
+        
+        .chat-container {
+            background-color: var(--surface);
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-top: 16px;
+            padding: 16px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .chat-message {
+            margin-bottom: 12px;
+            display: flex;
+        }
+        
+        .chat-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--surface-variant);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--on-surface-variant);
+            font-size: 16px;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+        
+        .message-content {
+            background-color: var(--surface-variant);
+            padding: 8px 12px;
+            border-radius: 16px;
+            border-top-left-radius: 4px;
+            color: var(--on-surface-variant);
+            font-size: 14px;
+            max-width: 75%;
+        }
+        
+        .chat-message.system {
+            justify-content: center;
+        }
+        
+        .chat-message.system .message-content {
+            background-color: transparent;
+            font-size: 12px;
+            color: var(--on-surface-variant);
+            opacity: 0.8;
+            padding: 4px 8px;
+        }
+        
+        .chat-message.self {
+            flex-direction: row-reverse;
+        }
+        
+        .chat-message.self .chat-avatar {
+            margin-right: 0;
+            margin-left: 12px;
+            background-color: var(--primary-container);
+            color: var(--on-primary-container);
+        }
+        
+        .chat-message.self .message-content {
+            background-color: var(--primary-container);
+            color: var(--on-primary-container);
+            border-radius: 16px;
+            border-top-right-radius: 4px;
+            border-top-left-radius: 16px;
+        }
+        
+        .chat-input-container {
+            display: flex;
+            margin-top: 16px;
+            background-color: var(--surface);
+            border-radius: 24px;
+            padding: 8px 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .chat-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            background: transparent;
+            padding: 8px;
+            color: var(--on-surface);
+        }
+        
+        .chat-send-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: var(--on-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .action-buttons {
+            display: flex;
+            margin-top: 24px;
+            margin-bottom: 32px;
+        }
+        
+        .action-btn {
+            flex: 1;
+            padding: 12px 0;
+            border-radius: 24px;
+            font-weight: 500;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: none;
+            margin: 0 8px;
+        }
+        
+        .action-btn i {
+            font-size: 20px;
+            margin-bottom: 6px;
+        }
+        
+        .btn-primary-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .btn-danger-outline {
+            background-color: transparent;
+            border: 1px solid var(--error);
+            color: var(--error);
+        }
+        
+        .dialog-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .dialog-content {
+            background-color: var(--surface);
+            border-radius: 16px;
+            padding: 24px;
+            width: 85%;
+            max-width: 320px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        }
+        
+        .dialog-title {
+            font-size: 20px;
+            font-weight: 500;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        
+        .dialog-input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--outline);
+            margin-bottom: 20px;
+            color: var(--on-surface);
+            background-color: var(--surface);
+        }
+        
+        .dialog-actions {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .study-room-task {
+            background-color: var(--surface);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .empty-task {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px 16px;
+        }
+        
+        .empty-task-icon {
+            font-size: 40px;
+            color: var(--on-surface-variant);
+            opacity: 0.5;
+            margin-bottom: 12px;
+        }
+        
+        .empty-task-text {
+            color: var(--on-surface-variant);
+            font-size: 16px;
+            margin-bottom: 16px;
+        }
+        
+        .task-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .task-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background-color: var(--primary-container);
+            color: var(--on-primary-container);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-right: 16px;
+        }
+        
+        .task-info {
+            flex: 1;
+        }
+        
+        .task-name {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        
+        .task-type {
+            font-size: 14px;
+            color: var(--on-surface-variant);
+        }
+        
+        .task-timer {
+            display: flex;
+            align-items: center;
+            margin-top: 8px;
+            font-size: 14px;
+        }
+        
+        #timerDisplay {
+            font-size: 24px;
+            font-weight: 500;
+            margin-right: 12px;
+        }
+        
+        .timer-phase {
+            color: var(--on-surface-variant);
+        }
+        
+        .timer-progress-bar {
+            height: 6px;
+            background-color: var(--surface-variant);
+            border-radius: 3px;
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+        
+        .progress-bar-inner {
+            height: 100%;
+            background-color: var(--primary);
+            border-radius: 3px;
+        }
+        
+        .task-footer {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+        
+        .danger-btn {
+            border-color: var(--error);
+            color: var(--error);
+        }
+        
+        .timer-type-selector {
+            display: flex;
+            margin-bottom: 16px;
+        }
+        
+        .timer-type-option {
+            flex: 1;
+            text-align: center;
+            padding: 12px 8px;
+            border: 1px solid var(--outline);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all 0.3s;
+        }
+        
+        .timer-type-option:first-child {
+            border-radius: 8px 0 0 8px;
+            border-right: none;
+        }
+        
+        .timer-type-option:last-child {
+            border-radius: 0 8px 8px 0;
+            border-left: none;
+        }
+        
+        .timer-type-option:not(:first-child):not(:last-child) {
+            border-left: none;
+            border-right: none;
+        }
+        
+        .timer-type-option i {
+            font-size: 20px;
+            margin-bottom: 6px;
+        }
+        
+        .timer-type-option.active {
+            background-color: var(--primary-container);
+            color: var(--on-primary-container);
+            border-color: var(--primary);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--outline);
+            background-color: var(--surface);
+            color: var(--on-surface);
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(54, 94, 157, 0.1);
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .number-selector {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .number-controls {
+            display: flex;
+            align-items: center;
+        }
+        
+        .number-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: var(--surface-variant);
+            color: var(--on-surface-variant);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .number-value {
+            margin: 0 12px;
+            font-weight: 500;
+            min-width: 24px;
+            text-align: center;
+        }
+        
+        .alert {
+            border-radius: 8px;
+            padding: 10px 16px;
+            margin-bottom: 16px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 状态栏 -->
+    <div class="status-bar">
+        <div class="status-bar-time">12:00</div>
+        <div class="status-bar-icons">
+            <i class="fas fa-wifi"></i>
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-battery-full"></i>
+        </div>
+    </div>
+    
+    <!-- 应用栏 -->
+    <div class="app-bar">
+        <a href="room_list.html" class="app-bar-back">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <div class="app-bar-title">自习室详情</div>
+    </div>
+    
+    <!-- 主内容 -->
+    <div class="page-container">
+        <!-- 自习室头部 -->
+        <div class="room-header">
+            <img src="https://source.unsplash.com/random/400x200?english,study" alt="自习室封面" class="room-header-image">
+            <div class="room-header-overlay">
+                <h1 class="room-name">每日英语学习小组</h1>
+                <div class="room-owner">
+                    <i class="fas fa-user-graduate"></i> 房主：学霸一号
+                </div>
+                <div class="room-tags">
+                    <span class="room-tag">英语</span>
+                    <span class="room-tag">口语</span>
+                    <span class="room-tag">CET-6</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 自习室统计 -->
+        <div class="room-stats">
+            <div class="stat-item">
+                <div class="stat-value">35</div>
+                <div class="stat-label">成员数</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">12</div>
+                <div class="stat-label">在线</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">3h</div>
+                <div class="stat-label">今日专注</div>
+            </div>
+        </div>
+        
+        <!-- 自习室描述 -->
+        <div class="section-title">自习室介绍</div>
+        <div class="room-description">
+            这是一个专注于英语学习的自习室，欢迎所有正在备考CET-4/6的同学加入。我们每天都会有固定的学习时间，一起练习听力、口语和阅读。如有疑问可以在群内交流，共同进步！
+        </div>
+        
+        <!-- 成员列表 -->
+        <div class="section-title">
+            成员列表
+            <span class="section-action">35/50人</span>
+        </div>
+        <div class="members-grid">
+            <!-- 房主 -->
+            <div class="member-item">
+                <div class="member-avatar" style="background-color: var(--primary-container); color: var(--on-primary-container);">
+                    <i class="fas fa-user-graduate"></i>
+                    <span class="member-online"></span>
+                </div>
+                <div class="member-name">学霸一号</div>
+                <div class="member-role">房主</div>
+            </div>
+            
+            <!-- 其他成员 -->
+            <div class="member-item">
+                <div class="member-avatar">
+                    <i class="fas fa-user"></i>
+                    <span class="member-online"></span>
+                </div>
+                <div class="member-name">小明</div>
+                <div class="member-role">成员</div>
+            </div>
+            
+            <div class="member-item">
+                <div class="member-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="member-name">小红</div>
+                <div class="member-role">成员</div>
+            </div>
+            
+            <div class="member-item">
+                <div class="member-avatar">
+                    <i class="fas fa-user"></i>
+                    <span class="member-online"></span>
+                </div>
+                <div class="member-name">小刚</div>
+                <div class="member-role">成员</div>
+            </div>
+            
+            <div class="member-item">
+                <div class="member-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="member-name">小李</div>
+                <div class="member-role">成员</div>
+            </div>
+            
+            <div class="member-item">
+                <div class="member-avatar">
+                    <i class="fas fa-user"></i>
+                    <span class="member-online"></span>
+                </div>
+                <div class="member-name">小王</div>
+                <div class="member-role">成员</div>
+            </div>
+            
+            <div class="member-item">
+                <div class="member-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="member-name">小张</div>
+                <div class="member-role">成员</div>
+            </div>
+            
+            <div class="member-item">
+                <div class="member-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="member-name">更多</div>
+                <div class="member-role">...</div>
+            </div>
+        </div>
+        
+        <!-- 自习室计时任务 -->
+        <div class="section-title">
+            我的自习任务
+            <span id="timerAction" class="section-action" style="display: none;">
+                <i class="fas fa-edit"></i> 编辑
+            </span>
+        </div>
+        
+        <!-- 无任务时显示 -->
+        <div id="noTimerTask" class="study-room-task empty-task">
+            <div class="empty-task-icon">
+                <i class="fas fa-hourglass-start"></i>
+            </div>
+            <div class="empty-task-text">您还没有创建自习任务</div>
+            <button class="btn material-btn" id="createTaskBtn">
+                <i class="fas fa-plus"></i> 创建学习任务
+            </button>
+        </div>
+        
+        <!-- 有任务但未开始时显示 -->
+        <div id="timerTaskReady" class="study-room-task" style="display: none;">
+            <div class="task-header">
+                <div class="task-icon">
+                    <i class="fas fa-book"></i>
+                </div>
+                <div class="task-info">
+                    <div class="task-name">英语听力训练</div>
+                    <div class="task-type">番茄钟 · 25分钟/个 · 休息5分钟</div>
+                </div>
+            </div>
+            <div class="task-footer">
+                <button class="btn material-btn" id="startTimerBtn">
+                    <i class="fas fa-play"></i> 开始专注
+                </button>
+            </div>
+        </div>
+        
+        <!-- 任务计时中显示 -->
+        <div id="timerTaskRunning" class="study-room-task" style="display: none;">
+            <div class="task-header">
+                <div class="task-icon">
+                    <i class="fas fa-book"></i>
+                </div>
+                <div class="task-info">
+                    <div class="task-name">英语听力训练</div>
+                    <div class="task-timer">
+                        <span id="timerDisplay">23:45</span>
+                        <span class="timer-phase">专注中 (1/4)</span>
+                    </div>
+                </div>
+            </div>
+            <div class="timer-progress-bar">
+                <div class="progress-bar-inner" style="width: 65%;"></div>
+            </div>
+            <div class="task-footer">
+                <button class="btn material-btn-outline" id="pauseTimerBtn">
+                    <i class="fas fa-pause"></i> 暂停
+                </button>
+                <button class="btn material-btn-outline danger-btn" id="stopTimerBtn">
+                    <i class="fas fa-stop"></i> 结束
+                </button>
+            </div>
+        </div>
+        
+        <!-- 聊天区 -->
+        <div class="section-title">聊天区</div>
+        <div class="chat-container">
+            <!-- 系统消息 -->
+            <div class="chat-message system">
+                <div class="message-content">
+                    欢迎加入自习室，请遵守自习室规则，保持安静
+                </div>
+            </div>
+            
+            <!-- 用户消息 -->
+            <div class="chat-message">
+                <div class="chat-avatar">
+                    <i class="fas fa-user-graduate"></i>
+                </div>
+                <div class="message-content">
+                    大家好，今天我们主要学习听力和口语，有问题可以在这里提问
+                </div>
+            </div>
+            
+            <!-- 自己的消息 -->
+            <div class="chat-message self">
+                <div class="chat-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="message-content">
+                    好的，已经准备好学习材料了
+                </div>
+            </div>
+            
+            <!-- 系统消息 -->
+            <div class="chat-message system">
+                <div class="message-content">
+                    小明加入了自习室
+                </div>
+            </div>
+            
+            <!-- 用户消息 -->
+            <div class="chat-message">
+                <div class="chat-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="message-content">
+                    有人知道下周考试的范围吗？
+                </div>
+            </div>
+            
+            <!-- 自己的消息 -->
+            <div class="chat-message self">
+                <div class="chat-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="message-content">
+                    第三章到第五章
+                </div>
+            </div>
+        </div>
+        
+        <!-- 聊天输入 -->
+        <div class="chat-input-container">
+            <input type="text" class="chat-input" placeholder="发送消息...">
+            <button class="chat-send-btn">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+        
+        <!-- 操作按钮 -->
+        <div class="action-buttons">
+            <button class="action-btn btn-danger-outline" id="leaveBtn">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>退出自习室</span>
+            </button>
+        </div>
+    </div>
+    
+    <!-- 密码输入弹窗 -->
+    <div class="dialog-overlay" id="passwordDialog">
+        <div class="dialog-content">
+            <div class="dialog-title">输入自习室密码</div>
+            <input type="password" class="dialog-input" placeholder="请输入密码">
+            <div class="dialog-actions">
+                <button class="btn material-btn-outline" onclick="closeDialog('passwordDialog')">取消</button>
+                <button class="btn material-btn" onclick="joinRoom()">确认</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 退出自习室确认弹窗 -->
+    <div class="dialog-overlay" id="leaveDialog">
+        <div class="dialog-content">
+            <div class="dialog-title">确定退出自习室？</div>
+            <div id="leaveTimerWarning" style="display: none; margin-bottom: 16px;">
+                <div class="alert alert-warning" style="padding: 10px; border-radius: 8px; background-color: #FFF3CD; color: #856404; border: 1px solid #FFEEBA;">
+                    <i class="fas fa-exclamation-triangle"></i> 您有正在进行的计时任务，退出将终止计时。
+                </div>
+                
+                <div class="form-check mb-2 mt-3">
+                    <input class="form-check-input" type="radio" name="leaveOption" id="leaveOptionComplete" checked>
+                    <label class="form-check-label" for="leaveOptionComplete">
+                        记录已完成的专注时间
+                    </label>
+                </div>
+                
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="radio" name="leaveOption" id="leaveOptionAbandon">
+                    <label class="form-check-label" for="leaveOptionAbandon">
+                        放弃记录本次专注时间
+                    </label>
+                </div>
+            </div>
+            <p id="leaveNormalText">退出后将不能查看自习室消息，需要重新加入</p>
+            <div class="dialog-actions">
+                <button class="btn material-btn-outline" onclick="closeDialog('leaveDialog')">取消</button>
+                <button class="btn material-btn" onclick="leaveRoom()">确认退出</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 计时结束确认弹窗 -->
+    <div class="dialog-overlay" id="stopConfirmModal">
+        <div class="dialog-content">
+            <div class="dialog-title">结束专注</div>
+            <p>当前任务尚未完成，选择结束方式：</p>
+            
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="radio" name="stopOption" id="optionComplete" checked>
+                <label class="form-check-label" for="optionComplete">
+                    记录此次专注时间
+                </label>
+            </div>
+            
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="radio" name="stopOption" id="optionAbandon">
+                <label class="form-check-label" for="optionAbandon">
+                    放弃记录此次时间
+                </label>
+            </div>
+            
+            <div class="dialog-actions">
+                <button class="btn material-btn-outline" onclick="closeStopModal()">取消</button>
+                <button class="btn material-btn" onclick="confirmStopTimer()">确定</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 创建自习室任务对话框 -->
+    <div class="dialog-overlay" id="createTaskDialog">
+        <div class="dialog-content">
+            <div class="dialog-title">创建学习任务</div>
+            
+            <div class="form-group mb-3">
+                <label for="taskName" class="form-label">任务名称</label>
+                <input type="text" class="form-control" id="taskName" placeholder="例如：英语听力训练" value="英语听力训练">
+            </div>
+            
+            <div class="form-group mb-3">
+                <label class="form-label">计时方式</label>
+                <div class="timer-type-selector">
+                    <div class="timer-type-option active" id="pomodoroOption">
+                        <i class="fas fa-hourglass-half"></i>
+                        <span>番茄钟</span>
+                    </div>
+                    <div class="timer-type-option" id="countdownOption">
+                        <i class="fas fa-stopwatch"></i>
+                        <span>倒计时</span>
+                    </div>
+                    <div class="timer-type-option" id="freeOption">
+                        <i class="fas fa-clock"></i>
+                        <span>自由计时</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 番茄钟选项 -->
+            <div id="pomodoroOptions">
+                <div class="number-selector mb-3">
+                    <label>每个番茄时长 (分钟)</label>
+                    <div class="number-controls">
+                        <button type="button" class="number-btn" onclick="decrementValue('pomodoroDuration')">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <span id="pomodoroDuration" class="number-value">25</span>
+                        <button type="button" class="number-btn" onclick="incrementValue('pomodoroDuration')">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="number-selector mb-3">
+                    <label>休息时长 (分钟)</label>
+                    <div class="number-controls">
+                        <button type="button" class="number-btn" onclick="decrementValue('restDuration')">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <span id="restDuration" class="number-value">5</span>
+                        <button type="button" class="number-btn" onclick="incrementValue('restDuration')">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 倒计时选项，默认隐藏 -->
+            <div id="countdownOptions" style="display: none;">
+                <div class="number-selector mb-3">
+                    <label>时长 (分钟)</label>
+                    <div class="number-controls">
+                        <button type="button" class="number-btn" onclick="decrementValue('countdownDuration')">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <span id="countdownDuration" class="number-value">45</span>
+                        <button type="button" class="number-btn" onclick="incrementValue('countdownDuration')">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 自由计时选项，默认隐藏 -->
+            <div id="freeOptions" style="display: none;">
+                <p class="text-center text-muted mb-3">不限时长，点击开始后即可自由计时</p>
+            </div>
+            
+            <div class="dialog-actions">
+                <button class="btn material-btn-outline" onclick="closeDialog('createTaskDialog')">取消</button>
+                <button class="btn material-btn" onclick="saveTask()">创建</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 底部导航栏 -->
+    <div class="bottom-nav">
+        <a href="../plan/plan_list.html" class="bottom-nav-item">
+            <i class="fas fa-tasks bottom-nav-icon"></i>
+            <span>计划</span>
+        </a>
+        <a href="index.html" class="bottom-nav-item active">
+            <i class="fas fa-clock bottom-nav-icon"></i>
+            <span>时间</span>
+        </a>
+        <a href="#" class="bottom-nav-item">
+            <i class="fas fa-robot bottom-nav-icon"></i>
+            <span>AI工具</span>
+        </a>
+        <a href="../user/profile.html" class="bottom-nav-item">
+            <i class="fas fa-user bottom-nav-icon"></i>
+            <span>我的</span>
+        </a>
+    </div>
+    
+    <script>
+        // 显示密码输入弹窗
+        function showPasswordDialog() {
+            document.getElementById('passwordDialog').style.display = 'flex';
+        }
+        
+        // 显示退出确认弹窗
+        document.getElementById('leaveBtn').addEventListener('click', function() {
+            // 检查是否有正在进行的计时
+            const isTimerRunning = document.getElementById('timerTaskRunning').style.display !== 'none';
+            
+            // 显示相应的警告信息
+            document.getElementById('leaveTimerWarning').style.display = isTimerRunning ? 'block' : 'none';
+            document.getElementById('leaveNormalText').style.display = isTimerRunning ? 'none' : 'block';
+            
+            // 显示退出确认弹窗
+            document.getElementById('leaveDialog').style.display = 'flex';
+        });
+        
+        // 关闭弹窗
+        function closeDialog(dialogId) {
+            document.getElementById(dialogId).style.display = 'none';
+        }
+        
+        // 加入自习室
+        function joinRoom() {
+            closeDialog('passwordDialog');
+            // 加入逻辑
+        }
+        
+        // 退出自习室
+        function leaveRoom() {
+            // 检查是否有正在进行的计时
+            const isTimerRunning = document.getElementById('timerTaskRunning').style.display !== 'none';
+            
+            if (isTimerRunning) {
+                // 停止计时
+                clearInterval(timerInterval);
+                
+                // 根据用户选择记录或放弃记录时间
+                const recordTime = document.getElementById('leaveOptionComplete').checked;
+                
+                if (recordTime) {
+                    // 记录时间逻辑
+                    console.log('已记录本次专注时间');
+                } else {
+                    // 放弃记录逻辑
+                    console.log('已放弃记录本次专注时间');
+                }
+            }
+            
+            // 关闭弹窗并离开自习室
+            closeDialog('leaveDialog');
+            window.location.href = 'room_list.html';
+        }
+        
+        // 计时器相关功能
+        document.getElementById('createTaskBtn').addEventListener('click', function() {
+            // 显示创建任务对话框
+            document.getElementById('createTaskDialog').style.display = 'flex';
+        });
+        
+        document.getElementById('startTimerBtn').addEventListener('click', function() {
+            // 开始计时，显示计时中界面
+            document.getElementById('timerTaskReady').style.display = 'none';
+            document.getElementById('timerTaskRunning').style.display = 'block';
+            document.getElementById('timerAction').style.display = 'none';
+            
+            // 这里可以添加实际的计时逻辑
+            startTimer();
+        });
+        
+        document.getElementById('pauseTimerBtn').addEventListener('click', function() {
+            // 切换暂停/继续状态
+            const btn = document.getElementById('pauseTimerBtn');
+            
+            if (btn.innerHTML.includes('暂停')) {
+                btn.innerHTML = '<i class="fas fa-play"></i> 继续';
+                pauseTimer();
+            } else {
+                btn.innerHTML = '<i class="fas fa-pause"></i> 暂停';
+                resumeTimer();
+            }
+        });
+        
+        document.getElementById('stopTimerBtn').addEventListener('click', function() {
+            // 显示结束确认对话框
+            document.getElementById('stopConfirmModal').style.display = 'flex';
+        });
+        
+        document.getElementById('timerAction').addEventListener('click', function() {
+            // 编辑任务逻辑，可以弹出编辑对话框
+            alert('编辑任务功能尚未实现');
+        });
+        
+        // 修改计时器功能以支持不同计时方式
+        let timerInterval;
+        let remainingSeconds = 25 * 60; // 默认25分钟
+        let currentTimerType = 'pomodoro';
+        let pomodoroRestDuration = 5 * 60; // 默认休息5分钟
+        let isPomodoroRest = false;
+        let pomodoroCount = 0;
+        let totalPomodoroCount = 4; // 默认4个番茄
+        let elapsedSeconds = 0; // 已经过的时间（用于自由计时）
+        
+        function startTimer() {
+            updateTimerDisplay();
+            
+            if (currentTimerType === 'free') {
+                // 自由计时，秒数递增
+                timerInterval = setInterval(() => {
+                    elapsedSeconds++;
+                    updateTimerDisplay();
+                }, 1000);
+            } else {
+                // 番茄钟和倒计时，秒数递减
+                timerInterval = setInterval(() => {
+                    remainingSeconds--;
+                    updateTimerDisplay();
+                    
+                    // 进度条更新
+                    updateProgressBar();
+                    
+                    if (remainingSeconds <= 0) {
+                        clearInterval(timerInterval);
+                        
+                        if (currentTimerType === 'pomodoro') {
+                            handlePomodoroComplete();
+                        } else {
+                            alert('倒计时结束！');
+                            completeTimer();
+                        }
+                    }
+                }, 1000);
+            }
+            
+            // 更新任务运行时状态显示
+            updateRunningTaskDisplay();
+        }
+        
+        function pauseTimer() {
+            clearInterval(timerInterval);
+        }
+        
+        function resumeTimer() {
+            startTimer();
+        }
+        
+        function stopTimer() {
+            clearInterval(timerInterval);
+            resetTimer();
+            
+            // 返回到任务准备状态
+            document.getElementById('timerTaskRunning').style.display = 'none';
+            document.getElementById('timerTaskReady').style.display = 'block';
+            document.getElementById('timerAction').style.display = 'inline-block';
+        }
+        
+        function resetTimer() {
+            // 重置计时器状态
+            if (currentTimerType === 'pomodoro') {
+                remainingSeconds = parseInt(document.getElementById('pomodoroDuration').innerText) * 60;
+            } else if (currentTimerType === 'countdown') {
+                remainingSeconds = parseInt(document.getElementById('countdownDuration').innerText) * 60;
+            } else {
+                elapsedSeconds = 0;
+            }
+            
+            isPomodoroRest = false;
+            pomodoroCount = 0;
+        }
+        
+        function completeTimer() {
+            // 计时完成，返回到任务准备状态
+            document.getElementById('timerTaskRunning').style.display = 'none';
+            document.getElementById('timerTaskReady').style.display = 'block';
+            document.getElementById('timerAction').style.display = 'inline-block';
+            resetTimer();
+        }
+        
+        function handlePomodoroComplete() {
+            if (isPomodoroRest) {
+                // 休息结束，回到工作状态
+                isPomodoroRest = false;
+                pomodoroCount++;
+                
+                if (pomodoroCount >= totalPomodoroCount) {
+                    // 所有番茄都完成了
+                    alert('恭喜！所有番茄钟都已完成！');
+                    completeTimer();
+                    return;
+                }
+                
+                // 继续下一个番茄
+                remainingSeconds = parseInt(document.getElementById('pomodoroDuration').innerText) * 60;
+                alert('休息结束，开始下一个番茄钟！');
+            } else {
+                // 工作结束，进入休息状态
+                isPomodoroRest = true;
+                remainingSeconds = pomodoroRestDuration;
+                alert('番茄钟完成，开始休息！');
+            }
+            
+            // 更新显示并继续计时
+            updateRunningTaskDisplay();
+            startTimer();
+        }
+        
+        function updateTimerDisplay() {
+            if (currentTimerType === 'free') {
+                // 自由计时，显示已经过的时间
+                const minutes = Math.floor(elapsedSeconds / 60);
+                const seconds = elapsedSeconds % 60;
+                document.getElementById('timerDisplay').textContent = 
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            } else {
+                // 番茄钟和倒计时，显示剩余时间
+                const minutes = Math.floor(remainingSeconds / 60);
+                const seconds = remainingSeconds % 60;
+                document.getElementById('timerDisplay').textContent = 
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
+        }
+        
+        function updateProgressBar() {
+            let maxSeconds;
+            if (currentTimerType === 'pomodoro') {
+                maxSeconds = isPomodoroRest ? pomodoroRestDuration : parseInt(document.getElementById('pomodoroDuration').innerText) * 60;
+            } else {
+                maxSeconds = parseInt(document.getElementById('countdownDuration').innerText) * 60;
+            }
+            
+            const percentage = ((maxSeconds - remainingSeconds) / maxSeconds) * 100;
+            document.querySelector('.progress-bar-inner').style.width = `${percentage}%`;
+        }
+        
+        function updateRunningTaskDisplay() {
+            const taskName = document.querySelector('#timerTaskReady .task-name').textContent;
+            document.querySelector('#timerTaskRunning .task-name').textContent = taskName;
+            
+            // 更新阶段显示
+            let phaseText = '';
+            if (currentTimerType === 'pomodoro') {
+                phaseText = isPomodoroRest ? 
+                    `休息中 (${pomodoroCount + 1}/${totalPomodoroCount})` : 
+                    `专注中 (${pomodoroCount + 1}/${totalPomodoroCount})`;
+            } else if (currentTimerType === 'countdown') {
+                phaseText = '专注中';
+            } else {
+                phaseText = '自由计时中';
+            }
+            document.querySelector('.timer-phase').textContent = phaseText;
+        }
+        
+        // 在离开页面和自习室前提示用户
+        window.addEventListener('beforeunload', function(e) {
+            if (document.getElementById('timerTaskRunning').style.display !== 'none') {
+                // 如果正在计时，提示用户
+                e.preventDefault();
+                e.returnValue = '您有正在进行的计时任务，确定要离开吗？';
+            }
+        });
+        
+        function closeStopModal() {
+            document.getElementById('stopConfirmModal').style.display = 'none';
+        }
+        
+        function confirmStopTimer() {
+            // 处理结束计时逻辑
+            stopTimer();
+            
+            // 根据用户选择记录或放弃记录时间
+            const recordTime = document.getElementById('optionComplete').checked;
+            
+            if (recordTime) {
+                // 记录时间逻辑
+                alert('已记录本次专注时间');
+            } else {
+                // 放弃记录逻辑
+                alert('已放弃记录本次专注时间');
+            }
+            
+            closeStopModal();
+        }
+        
+        // 切换计时方式
+        document.getElementById('pomodoroOption').addEventListener('click', function() {
+            setActiveTimerType('pomodoro');
+        });
+        
+        document.getElementById('countdownOption').addEventListener('click', function() {
+            setActiveTimerType('countdown');
+        });
+        
+        document.getElementById('freeOption').addEventListener('click', function() {
+            setActiveTimerType('free');
+        });
+        
+        function setActiveTimerType(type) {
+            // 重置所有选项和参数面板
+            document.getElementById('pomodoroOption').classList.remove('active');
+            document.getElementById('countdownOption').classList.remove('active');
+            document.getElementById('freeOption').classList.remove('active');
+            
+            document.getElementById('pomodoroOptions').style.display = 'none';
+            document.getElementById('countdownOptions').style.display = 'none';
+            document.getElementById('freeOptions').style.display = 'none';
+            
+            // 设置选中状态
+            document.getElementById(type + 'Option').classList.add('active');
+            document.getElementById(type + 'Options').style.display = 'block';
+        }
+        
+        // 数值加减控制
+        function incrementValue(id) {
+            const element = document.getElementById(id);
+            let value = parseInt(element.innerText);
+            
+            // 设置上限
+            let max = 120;
+            if (id === 'restDuration') max = 30;
+            
+            if (value < max) {
+                element.innerText = value + 1;
+            }
+        }
+        
+        function decrementValue(id) {
+            const element = document.getElementById(id);
+            let value = parseInt(element.innerText);
+            
+            // 设置下限
+            let min = 1;
+            if (id === 'restDuration') min = 0;
+            
+            if (value > min) {
+                element.innerText = value - 1;
+            }
+        }
+        
+        // 保存任务
+        function saveTask() {
+            // 获取任务名称
+            const taskName = document.getElementById('taskName').value;
+            
+            // 获取选中的计时方式
+            let timerType = 'pomodoro';
+            if (document.getElementById('countdownOption').classList.contains('active')) {
+                timerType = 'countdown';
+            } else if (document.getElementById('freeOption').classList.contains('active')) {
+                timerType = 'free';
+            }
+            
+            // 根据计时方式获取相应的参数
+            let taskParams = {};
+            if (timerType === 'pomodoro') {
+                taskParams = {
+                    duration: parseInt(document.getElementById('pomodoroDuration').innerText),
+                    rest: parseInt(document.getElementById('restDuration').innerText)
+                };
+            } else if (timerType === 'countdown') {
+                taskParams = {
+                    duration: parseInt(document.getElementById('countdownDuration').innerText)
+                };
+            }
+            
+            // 显示任务
+            document.getElementById('noTimerTask').style.display = 'none';
+            document.getElementById('timerTaskReady').style.display = 'block';
+            document.getElementById('timerAction').style.display = 'inline-block';
+            
+            // 更新任务显示内容
+            document.querySelector('#timerTaskReady .task-name').textContent = taskName;
+            
+            if (timerType === 'pomodoro') {
+                document.querySelector('#timerTaskReady .task-type').textContent = 
+                    `番茄钟 · ${taskParams.duration}分钟/个 · 休息${taskParams.rest}分钟`;
+            } else if (timerType === 'countdown') {
+                document.querySelector('#timerTaskReady .task-type').textContent = 
+                    `倒计时 · ${taskParams.duration}分钟`;
+            } else {
+                document.querySelector('#timerTaskReady .task-type').textContent = 
+                    `自由计时 · 不限时长`;
+            }
+            
+            // 关闭对话框
+            closeDialog('createTaskDialog');
+            
+            // 更新计时器设置
+            if (timerType === 'pomodoro' || timerType === 'countdown') {
+                remainingSeconds = taskParams.duration * 60;
+            } else {
+                remainingSeconds = 0; // 自由计时从0开始
+            }
+            
+            currentTimerType = timerType;
+            if (timerType === 'pomodoro') {
+                pomodoroRestDuration = taskParams.rest * 60;
+            }
+        }
+    </script>
+</body>
+</html> 

@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能学习助手原型</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <style>
+        body {
+            background-color: #f0f2f5;
+            padding: 20px;
+            font-family: 'Roboto', sans-serif;
+        }
+        .prototype-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .module-title {
+            color: #365E9D;
+            font-weight: bold;
+            margin: 30px 0 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #769CDF;
+        }
+        .frame-container {
+            padding: 8px;
+            margin: 8px 0;
+            vertical-align: top;
+        }
+        .phone-frame {
+            width: 100%;
+            max-width: 320px;
+            margin: 0 auto;
+            height: auto;
+            aspect-ratio: 9/19;
+            border: 10px solid #333;
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            position: relative;
+            background-color: #FFFFFF;
+        }
+        .screen-title {
+            text-align: center;
+            margin-top: 10px;
+            color: #333;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        .section-divider {
+            width: 100%;
+            border-bottom: 1px solid #ddd;
+            margin: 30px 0;
+            position: relative;
+        }
+        .section-title {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 0 20px;
+            font-weight: 500;
+            color: #444;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #365E9D;
+        }
+        .description {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 40px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <h1>智能学习助手原型</h1>
+    <p class="description">这是智能学习助手的交互原型，展示了应用的主要界面和功能流程。每个模块按照功能进行了分组展示。</p>
+    
+    <!-- 用户模块 -->
+    <div class="section-divider">
+        <div class="section-title">用户模块</div>
+    </div>
+    
+    <div class="prototype-container">
+        <div class="row">
+            <div class="frame-container col-sm-6 col-md-4">
+                <div class="phone-frame">
+                    <iframe src="user/splash.html" title="启动页"></iframe>
+                </div>
+                <p class="screen-title">启动页</p>
+            </div>
+            
+            <div class="frame-container col-sm-6 col-md-4">
+                <div class="phone-frame">
+                    <iframe src="user/intro.html" title="引导页"></iframe>
+                </div>
+                <p class="screen-title">引导页</p>
+            </div>
+            
+            <div class="frame-container col-sm-6 col-md-4">
+                <div class="phone-frame">
+                    <iframe src="user/login.html" title="登录页"></iframe>
+                </div>
+                <p class="screen-title">登录页</p>
+            </div>
+            
+            <div class="frame-container col-sm-6 col-md-4">
+                <div class="phone-frame">
+                    <iframe src="user/register.html" title="注册页"></iframe>
+                </div>
+                <p class="screen-title">注册页</p>
+            </div>
+            
+            <div class="frame-container col-sm-6 col-md-4">
+                <div class="phone-frame">
+                    <iframe src="user/forgot_password.html" title="忘记密码"></iframe>
+                </div>
+                <p class="screen-title">忘记密码</p>
+            </div>
+            
+            <div class="frame-container col-sm-6 col-md-4">
+                <div class="phone-frame">
+                    <iframe src="user/profile.html" title="个人资料"></iframe>
+                </div>
+                <p class="screen-title">个人资料</p>
+            </div>
+            
+            <div class="frame-container col-sm-6 col-md-4">
+                <div class="phone-frame">
+                    <iframe src="user/edit_profile.html" title="编辑资料"></iframe>
+                </div>
+                <p class="screen-title">编辑资料</p>
+            </div>
+            
+            <div class="frame-container col-sm-6 col-md-4">
+                <div class="phone-frame">
+                    <iframe src="user/settings.html" title="设置页面"></iframe>
+                </div>
+                <p class="screen-title">设置页面</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 计划模块 -->
+    <div class="section-divider">
+        <div class="section-title">计划模块</div>
+    </div>
+    
+    <div class="prototype-container">
+        <div class="row">
+            <div class="frame-container col-sm-6 col-md-4">
+                <div class="phone-frame">
+                    <iframe src="plan/plan_list.html" title="计划列表页"></iframe>
+                </div>
+                <p class="screen-title">计划列表页</p>
+            </div>
+            
+            <div class="frame-container col-sm-6 col-md-4">
+                <div class="phone-frame">
+                    <iframe src="plan/plan_detail.html" title="计划详情页"></iframe>
+                </div>
+                <p class="screen-title">计划详情页</p>
+            </div>
+            
+            <div class="frame-container col-sm-6 col-md-4">
+                <div class="phone-frame">
+                    <iframe src="plan/plan_create.html" title="创建计划页"></iframe>
+                </div>
+                <p class="screen-title">创建计划页</p>
+            </div>
+            
+            <div class="frame-container col-sm-6 col-md-4">
+                <div class="phone-frame">
+                    <iframe src="plan/task_create.html" title="创建任务页"></iframe>
+                </div>
+                <p class="screen-title">创建任务页</p>
+            </div>
+            
+            <div class="frame-container col-sm-6 col-md-4">
+                <div class="phone-frame">
+                    <iframe src="plan/task_detail.html" title="任务详情页"></iframe>
+                </div>
+                <p class="screen-title">任务详情页</p>
+            </div>
+            
+            <div class="frame-container col-sm-6 col-md-4">
+                <div class="phone-frame">
+                    <iframe src="plan/phase_create.html" title="创建阶段页"></iframe>
+                </div>
+                <p class="screen-title">创建阶段页</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 时间模块 -->
+    <div class="section-divider">
+        <div class="section-title">时间模块</div>
+    </div>
+    
+    <div class="prototype-container">
+        <div class="row">
+            <!-- 时间管理主页 -->
+            <div class="frame-container col-sm-6 col-md-4">
+                <div class="phone-frame">
+                    <iframe src="timer/index.html" title="时间管理主页"></iframe>
+                </div>
+                <p class="screen-title">时间管理主页</p>
+            </div>
+            
+            <!-- 计时器任务列表 -->
+            <div class="frame-container col-sm-6 col-md-4">
+                <div class="phone-frame">
+                    <iframe src="timer/timer_tasks.html" title="计时任务列表"></iframe>
+                </div>
+                <p class="screen-title">计时任务列表</p>
+            </div>
+            
+            <!-- 创建计时任务 -->
+            <div class="frame-container col-sm-6 col-md-4">
+                <div class="phone-frame">
+                    <iframe src="timer/timer_create.html" title="创建计时任务"></iframe>
+                </div>
+                <p class="screen-title">创建计时任务</p>
+            </div>
+            
+            <!-- 计时运行中 -->
+            <div class="frame-container col-sm-6 col-md-4">
+                <div class="phone-frame">
+                    <iframe src="timer/timer_running.html" title="计时运行中"></iframe>
+                </div>
+                <p class="screen-title">计时运行中</p>
+            </div>
+            
+            <!-- 计时统计 -->
+            <div class="frame-container col-sm-6 col-md-4">
+                <div class="phone-frame">
+                    <iframe src="timer/timer_statistics.html" title="专注统计"></iframe>
+                </div>
+                <p class="screen-title">专注统计</p>
+            </div>
+            
+            <!-- 自习室列表 -->
+            <div class="frame-container col-sm-6 col-md-4">
+                <div class="phone-frame">
+                    <iframe src="timer/room_list.html" title="自习室列表"></iframe>
+                </div>
+                <p class="screen-title">自习室列表</p>
+            </div>
+            
+            <!-- 我的自习室 -->
+            <div class="frame-container col-sm-6 col-md-4">
+                <div class="phone-frame">
+                    <iframe src="timer/room_mine.html" title="我的自习室"></iframe>
+                </div>
+                <p class="screen-title">我的自习室</p>
+            </div>
+            
+            <!-- 自习室详情 -->
+            <div class="frame-container col-sm-6 col-md-4">
+                <div class="phone-frame">
+                    <iframe src="timer/room_detail.html" title="自习室详情"></iframe>
+                </div>
+                <p class="screen-title">自习室详情</p>
+            </div>
+            
+            <!-- 创建自习室 -->
+            <div class="frame-container col-sm-6 col-md-4">
+                <div class="phone-frame">
+                    <iframe src="timer/room_create.html" title="创建自习室"></iframe>
+                </div>
+                <p class="screen-title">创建自习室</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- AI工具模块 -->
+    <div class="section-divider">
+        <div class="section-title">AI工具模块</div>
+    </div>
+    
+    <div class="prototype-container">
+        <div class="row">
+            <!-- AI工具箱主页 -->
+            <div class="frame-container col-sm-6 col-md-4">
+                <div class="phone-frame">
+                    <iframe src="ai-tool/index.html" title="AI工具箱"></iframe>
+                </div>
+                <p class="screen-title">AI工具箱</p>
+            </div>
+            
+            <!-- 错题本 -->
+            <div class="frame-container col-sm-6 col-md-4">
+                <div class="phone-frame">
+                    <iframe src="ai-tool/mistake_book.html" title="智能错题本"></iframe>
+                </div>
+                <p class="screen-title">智能错题本</p>
+            </div>
+            
+            <!-- 添加错题 -->
+            <div class="frame-container col-sm-6 col-md-4">
+                <div class="phone-frame">
+                    <iframe src="ai-tool/mistake_upload.html" title="添加错题"></iframe>
+                </div>
+                <p class="screen-title">添加错题</p>
+            </div>
+            
+            <!-- 翻译工具 -->
+            <div class="frame-container col-sm-6 col-md-4">
+                <div class="phone-frame">
+                    <iframe src="ai-tool/translate.html" title="智能翻译"></iframe>
+                </div>
+                <p class="screen-title">智能翻译</p>
+            </div>
+            
+            <!-- 文档总结 -->
+            <div class="frame-container col-sm-6 col-md-4">
+                <div class="phone-frame">
+                    <iframe src="ai-tool/document_summary.html" title="文档总结"></iframe>
+                </div>
+                <p class="screen-title">文档总结</p>
+            </div>
+            
+            <!-- AI对话 -->
+            <div class="frame-container col-sm-6 col-md-4">
+                <div class="phone-frame">
+                    <iframe src="ai-tool/ai_chat.html" title="智能对话助手"></iframe>
+                </div>
+                <p class="screen-title">智能对话助手</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/main.js"></script>
+</body>
+</html> 
